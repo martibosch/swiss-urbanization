@@ -1,4 +1,7 @@
 name: spatiotemporal-patterns-switzerland
+channels:
+  - conda-forge
+  - defaults
 dependencies:
   - pip
   - pip:
@@ -12,4 +15,5 @@ dependencies:
   - click
   - coverage
   - python=3
-
+  - boto3=1.9.86
+  - tqdm=4.30.0

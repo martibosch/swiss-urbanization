@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean clean_raw clean_interim clean_processed download_data lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -24,9 +24,38 @@ else
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 endif
 
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) swiss_urbanization/data/make_dataset.py
+## Download data
+# variables
+DOWNLOAD_DATA_PY = swiss_urbanization/data/download_data.py
+
+BOUNDARIES_DIR = data/raw/boundaries
+BOUNDARIES_FILEPATH := $(BOUNDARIES_DIR)/ggg_2018-LV95/shp/g1a18.shp
+CLC_YEAR_CODES = 00 06 12
+CLC_DIR = data/raw/clc
+CLC_DATASETS_DIRS := $(addprefix $(CLC_DIR)/, $(CLC_YEAR_CODES))
+
+# rules
+$(DOWNLOAD_DATA_PY): requirements
+$(BOUNDARIES_FILEPATH): $(DOWNLOAD_DATA_PY)
+	$(PYTHON_INTERPRETER) $(DOWNLOAD_DATA_PY) agglomeration-boundaries $(BOUNDARIES_DIR)
+$(CLC_DIR):
+	mkdir $(CLC_DIR)
+$(CLC_DATASETS_DIRS): $(DOWNLOAD_DATA_PY) | $(CLC_DIR)
+	$(PYTHON_INTERPRETER) swiss_urbanization/data/download_data.py clc-dataset $(notdir $@) $@
+download_data: $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS)
+
+## Clean Datasets
+clean_raw:
+	find data/raw/ ! -name '.gitkeep' -type f -exec rm -f {} +
+	find data/raw/ ! -path data/raw/ -type d -exec rm -rf {} +
+
+clean_interim:
+	find data/interim/ ! -name '.gitkeep' -type f -exec rm -f {} +
+	find data/interim/ ! -path data/interim/ -type d -exec rm -rf {} +
+
+clean_processed:
+	find data/processed/ ! -name '.gitkeep' -type f -exec rm -f {} +
+	find data/processed/ ! -path data/processed/ -type d -exec rm -rf {} +
 
 ## Delete all compiled Python files
 clean:
