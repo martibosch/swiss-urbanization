@@ -1,13 +1,13 @@
-.PHONY: clean clean_raw clean_interim clean_processed download_data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean clean_raw clean_interim clean_processed download_data swiss_extracts urban_extracts lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = ceat-spatiotemporal-patterns-switzerland
+BUCKET = ceat-swiss-urbanization
 PROFILE = ceat
-PROJECT_NAME = spatiotemporal-patterns-switzerland
+PROJECT_NAME = swiss-urbanization
 PYTHON_INTERPRETER = python3
 VIRTUALENV = conda
 
@@ -43,6 +43,36 @@ $(CLC_DIR):
 $(CLC_DATASETS_DIRS): $(DOWNLOAD_DATA_PY) | $(CLC_DIR)
 	$(PYTHON_INTERPRETER) swiss_urbanization/data/download_data.py clc-dataset $(notdir $@) $@
 download_data: $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS)
+
+## Swiss extracts
+# variables
+MAKE_SWISS_EXTRACT_PY = swiss_urbanization/data/make_swiss_extract.py
+SWISS_EXTRACTS_DIR = data/interim/swiss_extracts
+SWISS_EXTRACTS_FILEPATHS :=  $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), $(SWISS_EXTRACTS_DIR)/$(CLC_YEAR_CODE).tif)
+
+# rules
+$(MAKE_SWISS_EXTRACT_PY): requirements
+$(SWISS_EXTRACTS_DIR):
+	mkdir $(SWISS_EXTRACTS_DIR)
+$(SWISS_EXTRACTS_FILEPATHS): $(MAKE_SWISS_EXTRACT_PY) $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS) | $(SWISS_EXTRACTS_DIR)
+	$(PYTHON_INTERPRETER) $(MAKE_SWISS_EXTRACT_PY) swiss-extract $(BOUNDARIES_FILEPATH) $(CLC_DIR)/$(basename $(notdir $@))/*.tif $@
+swiss_extracts: $(SWISS_EXTRACTS_FILEPATHS)
+
+## Urban extracts
+# variables
+MAKE_URBAN_EXTRACT_PY = swiss_urbanization/data/make_urban_extract.py
+URBAN_EXTRACTS_DIR = data/processed/urban_extracts
+AGGLOMERATION_SLUGS = basel bern geneve lausanne zurich
+URBAN_EXTRACTS_FILEPATHS := $(addprefix $(URBAN_EXTRACTS_DIR)/, $(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(foreach YEAR_CODE, $(CLC_YEAR_CODES), $(AGGLOMERATION_SLUG)_$(YEAR_CODE).tif)))
+
+# rules
+$(MAKE_URBAN_EXTRACT_PY): requirements
+$(URBAN_EXTRACTS_DIR):
+	mkdir $(URBAN_EXTRACTS_DIR)
+$(URBAN_EXTRACTS_FILEPATHS): $(MAKE_URBAN_EXTRACT_PY) $(SWISS_EXTRACTS_FILEPATHS) | $(URBAN_EXTRACTS_DIR)
+	$(eval AGGLOMERATION_YEAR := $(subst _, , $(basename $(notdir $@))))
+	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) urban-extracts $(BOUNDARIES_FILEPATH) $(SWISS_EXTRACTS_DIR)/$(word 2, $(AGGLOMERATION_YEAR)).tif $(word 1, $(AGGLOMERATION_YEAR)) $@
+urban_extracts: $(URBAN_EXTRACTS_FILEPATHS)
 
 ## Clean Datasets
 clean_raw:

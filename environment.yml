@@ -1,4 +1,4 @@
-name: spatiotemporal-patterns-switzerland
+name: swiss-urbanization
 channels:
   - conda-forge
   - defaults
@@ -7,6 +7,7 @@ dependencies:
   - pip:
     - -e .
     - python-dotenv>=0.5.1
+    - python-slugify==2.0.1    
     - awscli
   - setuptools
   - wheel
@@ -17,3 +18,7 @@ dependencies:
   - python=3
   - boto3=1.9.86
   - tqdm=4.30.0
+  - geopandas=0.4.0  
+  - numpy=1.15.4  
+  - rasterio=1.0.15
+
