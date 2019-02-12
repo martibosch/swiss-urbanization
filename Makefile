@@ -1,4 +1,4 @@
-.PHONY: clean clean_raw clean_interim clean_processed download_data swiss_extracts urban_extracts lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean clean_raw clean_interim clean_processed clean_figures download_data swiss_extracts urban_extracts figure lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -74,6 +74,18 @@ $(URBAN_EXTRACTS_FILEPATHS): $(MAKE_URBAN_EXTRACT_PY) $(SWISS_EXTRACTS_FILEPATHS
 	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) urban-extracts $(BOUNDARIES_FILEPATH) $(SWISS_EXTRACTS_DIR)/$(word 2, $(AGGLOMERATION_YEAR)).tif $(word 1, $(AGGLOMERATION_YEAR)) $@
 urban_extracts: $(URBAN_EXTRACTS_FILEPATHS)
 
+## Plot
+# variables
+VISUALIZE_PY = swiss_urbanization/visualization/visualize.py
+FIGURE_FILEPATH = reports/figures/swiss-urbanization.png
+METRICS = fractal_dimension_am edge_density
+
+# rules
+$(VISUALIZE_PY): requirements
+$(FIGURE_FILEPATH): $(VISUALIZE_PY) $(URBAN_EXTRACTS_FILEPATHS)
+	$(PYTHON_INTERPRETER) $(VISUALIZE_PY) multi-agglomeration-plot $(URBAN_EXTRACTS_DIR) $(FIGURE_FILEPATH) --metrics $(METRICS) --year-codes $(CLC_YEAR_CODES) --agglomeration-slugs $(AGGLOMERATION_SLUGS)
+figure: $(FIGURE_FILEPATH)
+
 ## Clean Datasets
 clean_raw:
 	find data/raw/ ! -name '.gitkeep' -type f -exec rm -f {} +
@@ -86,6 +98,11 @@ clean_interim:
 clean_processed:
 	find data/processed/ ! -name '.gitkeep' -type f -exec rm -f {} +
 	find data/processed/ ! -path data/processed/ -type d -exec rm -rf {} +
+
+## Clean Figures
+clean_figures:
+	find reports/figures/ ! -name '.gitkeep' -type f -exec rm -f {} +
+	find reports/figures/ ! -path reports/figures/ -type d -exec rm -rf {} +
 
 ## Delete all compiled Python files
 clean:
