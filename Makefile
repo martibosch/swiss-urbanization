@@ -1,4 +1,4 @@
-.PHONY: clean clean_raw clean_interim clean_processed clean_figures download_data swiss_extracts urban_extracts figure lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py download_data swiss_extracts urban_extracts figure lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -35,7 +35,7 @@ CLC_DIR = data/raw/clc
 CLC_DATASETS_DIRS := $(addprefix $(CLC_DIR)/, $(CLC_YEAR_CODES))
 
 # rules
-$(DOWNLOAD_DATA_PY): requirements
+$(DOWNLOAD_DATA_PY): # requirements
 $(BOUNDARIES_FILEPATH): $(DOWNLOAD_DATA_PY)
 	$(PYTHON_INTERPRETER) $(DOWNLOAD_DATA_PY) agglomeration-boundaries $(BOUNDARIES_DIR)
 $(CLC_DIR):
@@ -51,7 +51,7 @@ SWISS_EXTRACTS_DIR = data/interim/swiss_extracts
 SWISS_EXTRACTS_FILEPATHS :=  $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), $(SWISS_EXTRACTS_DIR)/$(CLC_YEAR_CODE).tif)
 
 # rules
-$(MAKE_SWISS_EXTRACT_PY): requirements
+$(MAKE_SWISS_EXTRACT_PY): # requirements
 $(SWISS_EXTRACTS_DIR):
 	mkdir $(SWISS_EXTRACTS_DIR)
 $(SWISS_EXTRACTS_FILEPATHS): $(MAKE_SWISS_EXTRACT_PY) $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS) | $(SWISS_EXTRACTS_DIR)
@@ -66,7 +66,7 @@ AGGLOMERATION_SLUGS = basel bern geneve lausanne zurich
 URBAN_EXTRACTS_FILEPATHS := $(addprefix $(URBAN_EXTRACTS_DIR)/, $(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(foreach YEAR_CODE, $(CLC_YEAR_CODES), $(AGGLOMERATION_SLUG)_$(YEAR_CODE).tif)))
 
 # rules
-$(MAKE_URBAN_EXTRACT_PY): requirements
+$(MAKE_URBAN_EXTRACT_PY): # requirements
 $(URBAN_EXTRACTS_DIR):
 	mkdir $(URBAN_EXTRACTS_DIR)
 $(URBAN_EXTRACTS_FILEPATHS): $(MAKE_URBAN_EXTRACT_PY) $(SWISS_EXTRACTS_FILEPATHS) | $(URBAN_EXTRACTS_DIR)
@@ -81,7 +81,7 @@ FIGURE_FILEPATH = reports/figures/swiss-urbanization.png
 METRICS = fractal_dimension_am edge_density
 
 # rules
-$(VISUALIZE_PY): requirements
+$(VISUALIZE_PY): # requirements
 $(FIGURE_FILEPATH): $(VISUALIZE_PY) $(URBAN_EXTRACTS_FILEPATHS)
 	$(PYTHON_INTERPRETER) $(VISUALIZE_PY) multi-agglomeration-plot $(URBAN_EXTRACTS_DIR) $(FIGURE_FILEPATH) --metrics $(METRICS) --year-codes $(CLC_YEAR_CODES) --agglomeration-slugs $(AGGLOMERATION_SLUGS)
 figure: $(FIGURE_FILEPATH)
@@ -105,9 +105,12 @@ clean_figures:
 	find reports/figures/ ! -path reports/figures/ -type d -exec rm -rf {} +
 
 ## Delete all compiled Python files
-clean:
+clean_py:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
+
+## Clean all (except raw)
+clean: clean_interim clean_processed clean_figures clean_py
 
 ## Lint using flake8
 lint:
