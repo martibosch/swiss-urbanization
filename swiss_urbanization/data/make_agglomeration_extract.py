@@ -22,7 +22,7 @@ from slugify import slugify
 def main(boundaries_filepath, agglomeration_slug, input_filepath,
          output_filepath, input_nodata, output_nodata):
     logger = logging.getLogger(__name__)
-    logger.info(f'preparing urban extracts for {input_filepath} and '
+    logger.info(f'preparing agglomeration extracts for {input_filepath} and '
                 f'{agglomeration_slug}')
 
     gdf = gpd.read_file(boundaries_filepath)
@@ -55,23 +55,26 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             nodata=input_nodata)
         # reclassify it into urban/non-urban LULC
         # ACHTUNG: `img` will be of shape (1, width, height)
-        urban_arr = _urban_reclassify_corine(img[0], 1, 2, input_nodata,
-                                             output_nodata)
+        output_arr = _urban_reclassify_corine(img[0], 1, 2, input_nodata,
+                                              output_nodata)
+
+        output_height, output_width = output_arr.shape
+
         # update the keyword arguments to ouptut the urban extract as a GeoTiff
-        height, width = urban_arr.shape
         kwargs = src.meta.copy()
-        out_dtype = rio.uint8
+        output_dtype = rio.uint8
         kwargs.update({
-            'dtype': out_dtype,
-            'width': width,
-            'height': height,
+            'dtype': output_dtype,
+            'width': output_width,
+            'height': output_height,
             'transform': transform,
             'nodata': output_nodata
         })
         logger.info(
-            f'writing extract of shape {urban_arr.shape} to {output_filepath}')
+            f'writing extract of shape {output_arr.shape} to {output_filepath}'
+        )
         with rio.open(output_filepath, 'w', **kwargs) as dst:
-            dst.write(urban_arr.astype(out_dtype), 1)
+            dst.write(output_arr.astype(output_dtype), 1)
 
 
 if __name__ == '__main__':
