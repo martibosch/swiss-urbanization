@@ -26,53 +26,79 @@ endif
 
 ## Download data
 # variables
-DOWNLOAD_DATA_PY = swiss_urbanization/data/download_data.py
+DOWNLOAD_GMB_PY = swiss_urbanization/data/download_gmb.py
+DOWNLOAD_CLC_PY = swiss_urbanization/data/download_clc.py
 
-BOUNDARIES_DIR = data/raw/boundaries
-BOUNDARIES_FILEPATH := $(BOUNDARIES_DIR)/ggg_2018-LV95/shp/g1a18.shp
-CLC_YEAR_CODES = 00 06 12
+GMB_DIR = data/raw/gmb
+GMB_SHP_BASENAME = g1a18
+GMB_SHP_FILEPATH := $(GMB_DIR)/$(GMB_SHP_BASENAME).shp
+
 CLC_DIR = data/raw/clc
-CLC_DATASETS_DIRS := $(addprefix $(CLC_DIR)/, $(CLC_YEAR_CODES))
+CLC_YEAR_CODES = 00 06 12
+CLC_TIF_FILEPATHS := $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
+	$(CLC_DIR)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)
 
 # rules
-$(DOWNLOAD_DATA_PY): # requirements
-$(BOUNDARIES_FILEPATH): $(DOWNLOAD_DATA_PY)
-	$(PYTHON_INTERPRETER) $(DOWNLOAD_DATA_PY) agglomeration-boundaries $(BOUNDARIES_DIR)
+# rules
+$(GMB_DIR):
+	mkdir $(GMB_DIR)
+$(GMB_DIR)/%.zip: $(DOWNLOAD_GMB_PY) | $(GMB_DIR)
+	$(PYTHON_INTERPRETER) $(DOWNLOAD_GMB_PY) $@
+$(GMB_DIR)/%.shp: $(GMB_DIR)/%.zip
+	unzip -j $< 'ggg_2018-LV95/shp/$(GMB_SHP_BASENAME)*' -d $(GMB_DIR)
+	touch $(GMB_SHP_FILEPATH)
+
 $(CLC_DIR):
 	mkdir $(CLC_DIR)
-$(CLC_DATASETS_DIRS): $(DOWNLOAD_DATA_PY) | $(CLC_DIR)
-	$(PYTHON_INTERPRETER) swiss_urbanization/data/download_data.py clc-dataset $(notdir $@) $@
-download_data: $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS)
+$(CLC_DIR)/%.zip: $(DOWNLOAD_CLC_PY) | $(CLC_DIR)
+	mkdir -p $(dir $@)
+	$(PYTHON_INTERPRETER) $(DOWNLOAD_CLC_PY) $(basename $(notdir $@)) $@
+$(CLC_DIR)/%.tif: $(CLC_DIR)/%.zip
+	unzip $< -d $(dir $@)
+	mv $(dir $@)*.tif $@
+	if [ -f $(dir $@)*.aux ]; then mv $(dir $@)*.aux $(basename $@).aux; fi
+	touch $@
+
+download_gmb: $(GMB_SHP_FILEPATH)
+download_clc: $(CLC_TIF_FILEPATHS)
+
 
 ## Swiss extracts
 # variables
 MAKE_SWISS_EXTRACT_PY = swiss_urbanization/data/make_swiss_extract.py
 SWISS_EXTRACTS_DIR = data/interim/swiss_extracts
-SWISS_EXTRACTS_FILEPATHS :=  $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), $(SWISS_EXTRACTS_DIR)/$(CLC_YEAR_CODE).tif)
+SWISS_EXTRACTS_TIF_FILEPATHS :=  $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), $(SWISS_EXTRACTS_DIR)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)
 
 # rules
-$(MAKE_SWISS_EXTRACT_PY): # requirements
 $(SWISS_EXTRACTS_DIR):
 	mkdir $(SWISS_EXTRACTS_DIR)
-$(SWISS_EXTRACTS_FILEPATHS): $(MAKE_SWISS_EXTRACT_PY) $(BOUNDARIES_FILEPATH) $(CLC_DATASETS_DIRS) | $(SWISS_EXTRACTS_DIR)
-	$(PYTHON_INTERPRETER) $(MAKE_SWISS_EXTRACT_PY) swiss-extract $(BOUNDARIES_FILEPATH) $(CLC_DIR)/$(basename $(notdir $@))/*.tif $@
-swiss_extracts: $(SWISS_EXTRACTS_FILEPATHS)
+$(SWISS_EXTRACTS_DIR)/%.tif: $(CLC_DIR)/%.tif $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP_FILEPATH) | $(SWISS_EXTRACTS_DIR)
+	mkdir -p $(dir $@)
+	$(PYTHON_INTERPRETER) $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP_FILEPATH) $< $@
+swiss_extracts: $(SWISS_EXTRACTS_TIF_FILEPATHS)
 
 ## Urban extracts
 # variables
 MAKE_URBAN_EXTRACT_PY = swiss_urbanization/data/make_urban_extract.py
 URBAN_EXTRACTS_DIR = data/processed/urban_extracts
 AGGLOMERATION_SLUGS = basel bern geneve lausanne zurich
-URBAN_EXTRACTS_FILEPATHS := $(addprefix $(URBAN_EXTRACTS_DIR)/, $(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(foreach YEAR_CODE, $(CLC_YEAR_CODES), $(AGGLOMERATION_SLUG)_$(YEAR_CODE).tif)))
+URBAN_EXTRACTS_TIF_FILEPATHS := $(addprefix $(URBAN_EXTRACTS_DIR)/, \
+	$(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
+		$(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), \
+			$(AGGLOMERATION_SLUG)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)))
 
 # rules
-$(MAKE_URBAN_EXTRACT_PY): # requirements
 $(URBAN_EXTRACTS_DIR):
 	mkdir $(URBAN_EXTRACTS_DIR)
-$(URBAN_EXTRACTS_FILEPATHS): $(MAKE_URBAN_EXTRACT_PY) $(SWISS_EXTRACTS_FILEPATHS) | $(URBAN_EXTRACTS_DIR)
-	$(eval AGGLOMERATION_YEAR := $(subst _, , $(basename $(notdir $@))))
-	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) urban-extracts $(BOUNDARIES_FILEPATH) $(SWISS_EXTRACTS_DIR)/$(word 2, $(AGGLOMERATION_YEAR)).tif $(word 1, $(AGGLOMERATION_YEAR)) $@
-urban_extracts: $(URBAN_EXTRACTS_FILEPATHS)
+define MAKE_URBAN_EXTRACT
+$(URBAN_EXTRACTS_DIR)/$(AGGLOMERATION_SLUG)/%.tif: $(SWISS_EXTRACTS_DIR)/%.tif $(GMB_SHP_FILEPATH) | $(URBAN_EXTRACTS_DIR)
+	mkdir -p $$(dir $$@)
+	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) $(GMB_SHP_FILEPATH) $(AGGLOMERATION_SLUG) $$< $$@
+endef
+
+$(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(eval $(MAKE_URBAN_EXTRACT)))
+
+urban_extracts: $(URBAN_EXTRACTS_TIF_FILEPATHS)
 
 ## Plot
 # variables

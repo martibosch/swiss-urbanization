@@ -3,19 +3,21 @@ import logging
 from pathlib import Path
 
 import click
-import geopandas as gpd
 import numpy as np
+from dotenv import find_dotenv, load_dotenv
+
+import geopandas as gpd
 import rasterio as rio
 import rasterio.mask as rio_mask
-from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
 
 
+@click.command()
 @click.argument('boundaries_filepath', type=click.Path(exists=True))
-@click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('agglomeration_slug')
+@click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
-def main(boundaries_filepath, input_filepath, agglomeration_slug,
+def main(boundaries_filepath, agglomeration_slug, input_filepath,
          output_filepath):
     logger = logging.getLogger(__name__)
     logger.info(f'preparing urban extracts for {input_filepath} and '
@@ -51,8 +53,9 @@ def main(boundaries_filepath, input_filepath, agglomeration_slug,
         # update the keyword arguments to ouptut the urban extract as a GeoTiff
         height, width = urban_arr.shape
         kwargs = src.meta.copy()
+        out_dtype = rio.uint8
         kwargs.update({
-            'dtype': rio.uint8,
+            'dtype': out_dtype,
             'width': width,
             'height': height,
             'transform': transform,
@@ -61,7 +64,7 @@ def main(boundaries_filepath, input_filepath, agglomeration_slug,
         logger.info(
             f'writing extract of shape {urban_arr.shape} to {output_filepath}')
         with rio.open(output_filepath, 'w', **kwargs) as dst:
-            dst.write(urban_arr, 1)
+            dst.write(urban_arr.astype(out_dtype), 1)
 
 
 if __name__ == '__main__':
