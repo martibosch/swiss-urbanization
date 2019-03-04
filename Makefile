@@ -82,6 +82,7 @@ swiss_extracts: $(SWISS_EXTRACTS_TIF_FILEPATHS)
 MAKE_URBAN_EXTRACT_PY = swiss_urbanization/data/make_urban_extract.py
 URBAN_EXTRACTS_DIR = data/processed/urban_extracts
 AGGLOMERATION_SLUGS = basel bern geneve lausanne zurich
+INPUT_NODATA = 255  # ugly but needed, the nodata is not defined in some CLC years
 URBAN_EXTRACTS_TIF_FILEPATHS := $(addprefix $(URBAN_EXTRACTS_DIR)/, \
 	$(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
 		$(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), \
@@ -93,7 +94,7 @@ $(URBAN_EXTRACTS_DIR):
 define MAKE_URBAN_EXTRACT
 $(URBAN_EXTRACTS_DIR)/$(AGGLOMERATION_SLUG)/%.tif: $(SWISS_EXTRACTS_DIR)/%.tif $(GMB_SHP_FILEPATH) | $(URBAN_EXTRACTS_DIR)
 	mkdir -p $$(dir $$@)
-	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) $(GMB_SHP_FILEPATH) $(AGGLOMERATION_SLUG) $$< $$@
+	$(PYTHON_INTERPRETER) $(MAKE_URBAN_EXTRACT_PY) $(GMB_SHP_FILEPATH) $(AGGLOMERATION_SLUG) $$< $$@ --input-nodata 255
 endef
 
 $(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(eval $(MAKE_URBAN_EXTRACT)))
