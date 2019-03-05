@@ -22,12 +22,14 @@ from swiss_urbanization.data.utils import urban_reclassify_clc
 @click.argument('output_filepath', type=click.Path())
 @click.option('--input-nodata', required=False, default=None, type=int)
 @click.option('--output-nodata', required=False, default=0, type=int)
+@click.option('--buffer-dist', required=False, default=100, type=float)
 def main(boundaries_filepath,
          municipal_slug,
          input_filepath,
          output_filepath,
          input_nodata=None,
-         output_nodata=0):
+         output_nodata=0,
+         buffer_dist=200):
     logger = logging.getLogger(__name__)
     logger.info(f'preparing municipal extracts for {input_filepath} and '
                 f'{municipal_slug}')
@@ -51,24 +53,31 @@ def main(boundaries_filepath,
         municipal_extent_mask = img[0] != input_nodata
         # 2. Reclassify the CLC values of the whole landscape into a binary
         #    urban/non-urban array
+        # reclassify it into urban/non-urban LULC
+        # we will just consider urban pixels, the rest will be considered as
+        # `nodata`, which is why `output_nodata` is the third argument
+        # (instead of an arbitrary value to denonte non-urban classes)
         urban_arr = urban_reclassify_clc(
-            src.read(1), 1, output_nodata, input_nodata, output_nodata)
-        # 3. Get labelled features of the reclassified array
+            src.read(1), 1, 2, input_nodata, output_nodata)
+        # 3. Get labelled urban features of the reclassified array
         label_arr, _ = ndi.label(
-            urban_arr, structure=ndi.generate_binary_structure(2, 2))
+            urban_arr == 1, structure=ndi.generate_binary_structure(2, 2))
         # 4. Get the labels of the features (urban patches) that intersect the
         #    municipal boundaries
         extent_labels = np.delete(
             np.unique(np.where(municipal_extent_mask, label_arr, 0)), 0)
-        # 5. Get a mask for the corrected extent, that is, the union of the
-        #    municipal extent plus the extent of the untrimmed patches that
-        #    intersect it
-        corrected_extent_mask = (municipal_extent_mask) | (np.isin(
-            label_arr, extent_labels))
-        # 6. Get the bounds of the corrected extent mask
-        rows, cols = ndi.find_objects(corrected_extent_mask)[0]
+        # 5. Get a mask for the extent of the untrimmed patches that intersect
+        # the municipal boundaries, plus an arbitrary buffer
+        iterations = int(buffer_dist / src.res[0])
+        if iterations < 1:
+            iterations = 1
+        extent_mask = ndi.binary_dilation(
+            np.isin(label_arr, extent_labels), iterations=iterations)
+        # 6. Get the bounds of the extent mask
+        rows, cols = ndi.find_objects(extent_mask)[0]
         # 7. Get the output array
-        output_arr = np.where(corrected_extent_mask, urban_arr, 0)[rows, cols]
+        output_arr = np.where(extent_mask, urban_arr,
+                              output_nodata)[rows, cols]
 
         # Get some necessary metadata to write the extract
         output_height, output_width = output_arr.shape

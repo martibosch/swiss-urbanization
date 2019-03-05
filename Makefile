@@ -1,4 +1,6 @@
-.PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py download_data swiss_extracts urban_extracts figure lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
+download_data swiss_extracts agglomeration_extracts municipal_extracts figure \
+lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
