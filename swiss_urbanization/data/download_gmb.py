@@ -4,7 +4,6 @@ from pathlib import Path
 from urllib import request
 
 import click
-
 from dotenv import find_dotenv, load_dotenv
 
 # https://www.bfs.admin.ch/bfs/fr/home/services/geostat/geodonnees-statistique-federale/limites-administratives/limites-communales-generalisees.assetdetail.5247306.html

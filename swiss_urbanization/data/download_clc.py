@@ -5,12 +5,11 @@ import sys
 from os import path
 from pathlib import Path
 
+import boto3
 import botocore
 import click
-from dotenv import find_dotenv, load_dotenv
-
-import boto3
 from boto3.s3.transfer import TransferConfig
+from dotenv import find_dotenv, load_dotenv
 from tqdm import tqdm
 
 

@@ -3,13 +3,13 @@ import logging
 from pathlib import Path
 
 import click
-import numpy as np
-from dotenv import find_dotenv, load_dotenv
-
 import geopandas as gpd
 import rasterio as rio
 import rasterio.mask as rio_mask
+from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
+
+from swiss_urbanization.data.utils import urban_reclassify_clc
 
 
 @click.command()
@@ -26,16 +26,6 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
                 f'{agglomeration_slug}')
 
     gdf = gpd.read_file(boundaries_filepath)
-
-    def _urban_reclassify_corine(landscape_arr, urban_class, non_urban_class,
-                                 input_nodata, output_nodata):
-        # function to reclassify CLC codes into urban/non-urban
-        arr = np.copy(landscape_arr)
-        arr[(arr >= 1) & (arr <= 11)] = urban_class
-        arr[(arr != 1) & (arr != input_nodata)] = non_urban_class
-        arr[arr == input_nodata] = output_nodata
-
-        return arr
 
     with rio.open(input_filepath) as src:
         # get the municipal boundaries that configure the agglomeration
@@ -55,8 +45,8 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             nodata=input_nodata)
         # reclassify it into urban/non-urban LULC
         # ACHTUNG: `img` will be of shape (1, width, height)
-        output_arr = _urban_reclassify_corine(img[0], 1, 2, input_nodata,
-                                              output_nodata)
+        output_arr = urban_reclassify_clc(img[0], 1, 2, input_nodata,
+                                          output_nodata)
 
         output_height, output_width = output_arr.shape
 

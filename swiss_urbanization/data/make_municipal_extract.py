@@ -3,15 +3,16 @@ import logging
 from pathlib import Path
 
 import click
-import numpy as np
-import scipy.ndimage as ndi
-from dotenv import find_dotenv, load_dotenv
-
 import geopandas as gpd
+import numpy as np
 import rasterio as rio
 import rasterio.mask as rio_mask
 import rasterio.windows as rio_windows
+import scipy.ndimage as ndi
+from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
+
+from swiss_urbanization.data.utils import urban_reclassify_clc
 
 
 @click.command()
@@ -33,16 +34,6 @@ def main(boundaries_filepath,
 
     gdf = gpd.read_file(boundaries_filepath)
 
-    def _urban_reclassify_corine(landscape_arr, urban_class, non_urban_class,
-                                 input_nodata, output_nodata):
-        # function to reclassify CLC codes into urban/non-urban
-        arr = np.copy(landscape_arr)
-        arr[(arr >= 1) & (arr <= 11)] = urban_class
-        arr[(arr != 1) & (arr != input_nodata)] = non_urban_class
-        arr[arr == input_nodata] = output_nodata
-
-        return arr
-
     with rio.open(input_filepath) as src:
         # get the municipal boundary
         municipal_gser = gdf[gdf['GMDNAME'].apply(slugify) == municipal_slug][
@@ -60,7 +51,7 @@ def main(boundaries_filepath,
         municipal_extent_mask = img[0] != input_nodata
         # 2. Reclassify the CLC values of the whole landscape into a binary
         #    urban/non-urban array
-        urban_arr = _urban_reclassify_corine(
+        urban_arr = urban_reclassify_clc(
             src.read(1), 1, output_nodata, input_nodata, output_nodata)
         # 3. Get labelled features of the reclassified array
         label_arr, _ = ndi.label(
