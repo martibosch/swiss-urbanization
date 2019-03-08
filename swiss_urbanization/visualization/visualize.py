@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import pylandstats as pls
 from dotenv import find_dotenv, load_dotenv
 
+from swiss_urbanization.data import settings
+
 
 class OptionEatAll(click.Option):
     # Option that can take an unlimided number of arguments
@@ -73,8 +75,6 @@ def multi_city_plot(ctx, urban_extracts_dir, out_figure_filepath, metrics,
                     year_codes, city_slugs):
     logger = ctx.obj['LOGGER']
 
-    URBAN_CLASS_VAL = 1
-
     num_rows = len(metrics)
     num_cols = len(city_slugs)
     figwidth, figlength = plt.rcParams['figure.figsize']
@@ -92,13 +92,13 @@ def multi_city_plot(ctx, urban_extracts_dir, out_figure_filepath, metrics,
                 for year_code in year_codes
             ],
             metrics=metrics,
-            classes=[URBAN_CLASS_VAL],
+            classes=[settings.EXTRACTS_URBAN],
             dates=year_codes)
 
         for i, metric in enumerate(metrics):
             sta.plot_metric(
                 metric,
-                class_val=URBAN_CLASS_VAL,
+                class_val=settings.EXTRACTS_URBAN,
                 ax=axes[i, j],
                 metric_legend=False)
 

@@ -12,7 +12,7 @@ import scipy.ndimage as ndi
 from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
 
-from swiss_urbanization.data.utils import urban_reclassify_clc
+from swiss_urbanization.data import settings, utils
 
 
 @click.command()
@@ -20,15 +20,11 @@ from swiss_urbanization.data.utils import urban_reclassify_clc
 @click.argument('municipal_slug')
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
-@click.option('--input-nodata', required=False, default=None, type=int)
-@click.option('--output-nodata', required=False, default=0, type=int)
 @click.option('--buffer-dist', required=False, default=100, type=float)
 def main(boundaries_filepath,
          municipal_slug,
          input_filepath,
          output_filepath,
-         input_nodata=None,
-         output_nodata=0,
          buffer_dist=200):
     logger = logging.getLogger(__name__)
     logger.info(f'preparing municipal extracts for {input_filepath} and '
@@ -41,8 +37,9 @@ def main(boundaries_filepath,
         municipal_gser = gdf[gdf['GMDNAME'].apply(slugify) == municipal_slug][
             'geometry']
         # ugly trick since in some years, `src.nodata` is 255 and in other it
-        # is `None`
-        input_nodata = input_nodata or src.nodata
+        # is `None`. The variable `input_data` will take the first (from left
+        # to right) non-None value, so if not None, `src.nodata` has priority
+        input_nodata = src.nodata or settings.CLC_NODATA
         # We want to extract the urban patches that intersect the municipal
         # boundaries. This is done in the following 7 steps:
         # 1. Get municipal extent mask (we will not use `crop=True`) because
@@ -57,11 +54,13 @@ def main(boundaries_filepath,
         # we will just consider urban pixels, the rest will be considered as
         # `nodata`, which is why `output_nodata` is the third argument
         # (instead of an arbitrary value to denonte non-urban classes)
-        urban_arr = urban_reclassify_clc(
-            src.read(1), 1, 2, input_nodata, output_nodata)
+        urban_arr = utils.urban_reclassify_clc(
+            src.read(1), settings.EXTRACTS_URBAN, settings.EXTRACTS_NONURBAN,
+            input_nodata, settings.EXTRACTS_NODATA)
         # 3. Get labelled urban features of the reclassified array
         label_arr, _ = ndi.label(
-            urban_arr == 1, structure=ndi.generate_binary_structure(2, 2))
+            urban_arr == settings.EXTRACTS_URBAN,
+            structure=ndi.generate_binary_structure(2, 2))
         # 4. Get the labels of the features (urban patches) that intersect the
         #    municipal boundaries
         extent_labels = np.delete(
@@ -77,7 +76,7 @@ def main(boundaries_filepath,
         rows, cols = ndi.find_objects(extent_mask)[0]
         # 7. Get the output array
         output_arr = np.where(extent_mask, urban_arr,
-                              output_nodata)[rows, cols]
+                              settings.EXTRACTS_NODATA)[rows, cols]
 
         # Get some necessary metadata to write the extract
         output_height, output_width = output_arr.shape
@@ -93,7 +92,7 @@ def main(boundaries_filepath,
             'width': output_width,
             'height': output_height,
             'transform': output_transform,
-            'nodata': output_nodata
+            'nodata': settings.EXTRACTS_NODATA
         })
         logger.info(
             f'writing extract of shape {output_arr.shape} to {output_filepath}'

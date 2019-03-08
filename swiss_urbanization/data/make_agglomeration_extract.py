@@ -9,7 +9,7 @@ import rasterio.mask as rio_mask
 from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
 
-from swiss_urbanization.data.utils import urban_reclassify_clc
+from swiss_urbanization.data import settings, utils
 
 
 @click.command()
@@ -17,10 +17,8 @@ from swiss_urbanization.data.utils import urban_reclassify_clc
 @click.argument('agglomeration_slug')
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
-@click.option('--input-nodata', required=False, default=None, type=int)
-@click.option('--output-nodata', required=False, default=0, type=int)
 def main(boundaries_filepath, agglomeration_slug, input_filepath,
-         output_filepath, input_nodata, output_nodata):
+         output_filepath):
     logger = logging.getLogger(__name__)
     logger.info(f'preparing agglomeration extracts for {input_filepath} and '
                 f'{agglomeration_slug}')
@@ -34,8 +32,9 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
         agglomeration_gser = gdf[gdf['ANAME'].apply(slugify).str.contains(
             agglomeration_slug)]['geometry']
         # ugly trick since in some years, `src.nodata` is 255 and in other it
-        # is `None`
-        input_nodata = input_nodata or src.nodata
+        # is `None`. The variable `input_data` will take the first (from left
+        # to right) non-None value, so if not None, `src.nodata` has priority
+        input_nodata = src.nodata or settings.CLC_NODATA
         # get only the subset of the LULC raster that falls within the
         # above boundaries
         img, transform = rio_mask.mask(
@@ -45,8 +44,9 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             nodata=input_nodata)
         # reclassify it into urban/non-urban LULC
         # ACHTUNG: `img` will be of shape (1, width, height)
-        output_arr = urban_reclassify_clc(img[0], 1, 2, input_nodata,
-                                          output_nodata)
+        output_arr = utils.urban_reclassify_clc(
+            img[0], settings.EXTRACTS_URBAN, settings.EXTRACTS_NONURBAN,
+            input_nodata, settings.EXTRACTS_NODATA)
 
         output_height, output_width = output_arr.shape
 
@@ -58,7 +58,7 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             'width': output_width,
             'height': output_height,
             'transform': transform,
-            'nodata': output_nodata
+            'nodata': settings.EXTRACTS_NODATA
         })
         logger.info(
             f'writing extract of shape {output_arr.shape} to {output_filepath}'
