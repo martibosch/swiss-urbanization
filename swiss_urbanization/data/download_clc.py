@@ -49,7 +49,8 @@ def main(clc_basename, output_filepath):
     CLC_BASENAME_KEY_DICT = {
         '00': 'g100_clc00_V18_5.zip',
         '06': 'g100_clc06_V18_5a.zip',
-        '12': 'g100_clc12_V18_5a.zip'
+        '12': 'g100_clc12_V18_5a.zip',
+        '18': 'clc2018_clc2018_v2018_20b2_raster100m.zip'
     }
     key = path.join('clc', CLC_BASENAME_KEY_DICT[clc_basename])
 
