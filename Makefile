@@ -135,7 +135,7 @@ METRICS = fractal_dimension_am edge_density
 # rules
 $(VISUALIZE_PY): # requirements
 $(FIGURE_FILEPATH): $(VISUALIZE_PY) $(URBAN_EXTRACTS_FILEPATHS)
-	$(PYTHON_INTERPRETER) $(VISUALIZE_PY) multi-agglomeration-plot $(URBAN_EXTRACTS_DIR) $(FIGURE_FILEPATH) --metrics $(METRICS) --year-codes $(CLC_YEAR_CODES) --agglomeration-slugs $(AGGLOMERATION_SLUGS)
+	$(PYTHON_INTERPRETER) $(VISUALIZE_PY) multi-city-plot $(URBAN_EXTRACTS_DIR) $(FIGURE_FILEPATH) --metrics $(METRICS) --year-codes $(CLC_YEAR_CODES) --city-slugs $(CITY_SLUGS)
 figure: $(FIGURE_FILEPATH)
 
 ## Clean Datasets

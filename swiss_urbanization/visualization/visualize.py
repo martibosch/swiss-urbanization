@@ -68,15 +68,15 @@ def cli(ctx):
 @click.argument('out_figure_filepath', type=click.Path())
 @click.option('--metrics', required=True, cls=OptionEatAll)
 @click.option('--year-codes', required=True, cls=OptionEatAll)
-@click.option('--agglomeration-slugs', required=True, cls=OptionEatAll)
-def multi_agglomeration_plot(ctx, urban_extracts_dir, out_figure_filepath,
-                             metrics, year_codes, agglomeration_slugs):
+@click.option('--city-slugs', required=True, cls=OptionEatAll)
+def multi_city_plot(ctx, urban_extracts_dir, out_figure_filepath, metrics,
+                    year_codes, city_slugs):
     logger = ctx.obj['LOGGER']
 
     URBAN_CLASS_VAL = 1
 
     num_rows = len(metrics)
-    num_cols = len(agglomeration_slugs)
+    num_cols = len(city_slugs)
     figwidth, figlength = plt.rcParams['figure.figsize']
     fig, axes = plt.subplots(
         num_rows,
@@ -84,12 +84,11 @@ def multi_agglomeration_plot(ctx, urban_extracts_dir, out_figure_filepath,
         sharex=True,
         figsize=(figwidth * num_cols, figlength * num_rows))
 
-    for j, agglomeration_slug in enumerate(agglomeration_slugs):
-        logger.info(f'computing landscape metrics for {agglomeration_slug}')
+    for j, city_slug in enumerate(city_slugs):
+        logger.info(f'computing landscape metrics for {city_slug}')
         sta = pls.SpatioTemporalAnalysis(
             [
-                path.join(urban_extracts_dir,
-                          f'{agglomeration_slug}_{year_code}.tif')
+                path.join(urban_extracts_dir, f'{city_slug}_{year_code}.tif')
                 for year_code in year_codes
             ],
             metrics=metrics,
@@ -106,8 +105,8 @@ def multi_agglomeration_plot(ctx, urban_extracts_dir, out_figure_filepath,
     for i, metric in enumerate(metrics):
         axes[i, 0].set_ylabel(metric)
 
-    for j, agglomeration_slug in enumerate(agglomeration_slugs):
-        axes[0, j].set_title(agglomeration_slug.title())
+    for j, city_slug in enumerate(city_slugs):
+        axes[0, j].set_title(city_slug.title())
 
     logger.info(f'saving figure to {out_figure_filepath}')
 
