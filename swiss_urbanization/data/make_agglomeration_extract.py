@@ -44,9 +44,7 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             nodata=input_nodata)
         # reclassify it into urban/non-urban LULC
         # ACHTUNG: `img` will be of shape (1, width, height)
-        output_arr = utils.urban_reclassify_clc(
-            img[0], settings.EXTRACTS_URBAN, settings.EXTRACTS_NONURBAN,
-            input_nodata, settings.EXTRACTS_NODATA)
+        output_arr = utils.urban_reclassify_clc(img[0])
 
         output_height, output_width = output_arr.shape
 

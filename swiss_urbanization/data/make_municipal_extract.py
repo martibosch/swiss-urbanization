@@ -34,8 +34,8 @@ def main(boundaries_filepath,
 
     with rio.open(input_filepath) as src:
         # get the municipal boundary
-        municipal_gser = gdf[gdf['GMDNAME'].apply(slugify) == municipal_slug][
-            'geometry']
+        municipal_gser = gdf[gdf['GMDNAME'].apply(slugify) ==
+                             municipal_slug]['geometry']
         # ugly trick since in some years, `src.nodata` is 255 and in other it
         # is `None`. The variable `input_data` will take the first (from left
         # to right) non-None value, so if not None, `src.nodata` has priority
@@ -54,9 +54,7 @@ def main(boundaries_filepath,
         # we will just consider urban pixels, the rest will be considered as
         # `nodata`, which is why `output_nodata` is the third argument
         # (instead of an arbitrary value to denonte non-urban classes)
-        urban_arr = utils.urban_reclassify_clc(
-            src.read(1), settings.EXTRACTS_URBAN, settings.EXTRACTS_NONURBAN,
-            input_nodata, settings.EXTRACTS_NODATA)
+        urban_arr = utils.urban_reclassify_clc(src.read(1))
         # 3. Get labelled urban features of the reclassified array
         label_arr, _ = ndi.label(
             urban_arr == settings.EXTRACTS_URBAN,

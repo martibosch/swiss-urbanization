@@ -1,5 +1,7 @@
 import numpy as np
 
+from . import settings
+
 # ugly hardcoded mapping of pixel values (grid) and clc codes according to the
 # `Legend/clc_legend.xls` file which can be found for the 90, 00, 06 and 12 CLC
 # datasets. This could be better managed as we are hardcoding metadata.
@@ -58,25 +60,41 @@ grid_clc_dict = {
 }
 
 
-def urban_reclassify_clc(landscape_arr, urban_class, non_urban_class,
-                         input_nodata, output_nodata):
+def urban_reclassify_clc(landscape_arr,
+                         urban_class=None,
+                         nonurban_class=None,
+                         output_nodata=None):
     # function to reclassify CLC codes into urban/non-urban
-    arr = np.copy(landscape_arr)
 
-    if set(np.unique(arr)).issubset(set(grid_clc_dict)):
-        # if the array codes correspond to the "grid" codes of CLC (the keys
-        # of `grid_clc_dict`), we are dealing with the 00, 06 or 12 datasets
-        arr[(arr >= 1) & (arr <= 11)] = urban_class
-        arr[(arr != urban_class) & (arr != input_nodata)] = non_urban_class
-        arr[arr == input_nodata] = output_nodata
-    else:
+    # if not provided, get codes from settings
+    if urban_class is None:
+        urban_class = settings.EXTRACTS_URBAN
+    if nonurban_class is None:
+        nonurban_class = settings.EXTRACTS_NONURBAN
+    if output_nodata is None:
+        output_nodata = settings.EXTRACTS_NODATA
+
+    # init output array full of 'nodata' codes
+    output_arr = np.full_like(landscape_arr, output_nodata)
+
+    lower_urban, upper_urban = settings.CLC_URBAN
+    lower_nonurban, upper_nonurban = settings.CLC_NONURBAN
+
+    # if the array codes correspond to the "grid" codes of CLC (the keys
+    # of `grid_clc_dict`), we are dealing with the 00, 06 or 12 datasets
+    if not set(np.unique(landscape_arr)).issubset(set(grid_clc_dict)):
         # here we assume that we are dealing with the 18 dataset, where the
         # pixel values directly correspond to the CLC codes (the values of
         # `grid_clc_dict`)
-        # TODO: use `grid_clc_dict` to automatically get the extremes of each
-        # interval, e.g., `grid_clc_dict[1]` instead of `111`
-        arr[(arr >= 111) & (arr <= 142)] = urban_class
-        arr[(arr != urban_class) & (arr != input_nodata)] = non_urban_class
-        arr[arr == input_nodata] = output_nodata
+        lower_urban = grid_clc_dict[lower_urban]
+        upper_urban = grid_clc_dict[upper_urban]
+        lower_nonurban = grid_clc_dict[lower_nonurban]
+        upper_nonurban = grid_clc_dict[upper_nonurban]
 
-    return arr
+    # fill the output array with urban/nonurban codes
+    output_arr[(landscape_arr >= lower_urban)
+               & (landscape_arr <= upper_urban)] = urban_class
+    output_arr[(landscape_arr >= lower_nonurban)
+               & (landscape_arr <= upper_nonurban)] = nonurban_class
+
+    return output_arr
