@@ -1,6 +1,6 @@
 .PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
-download_data swiss_extracts agglomeration_extracts municipal_extracts figure \
-lint requirements sync_data_to_s3 sync_data_from_s3
+download_data swiss_extracts agglomeration_extracts figure lint requirements \
+sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -79,7 +79,7 @@ $(SWISS_EXTRACTS_DIR)/%.tif: $(CLC_DIR)/%.tif $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP
 	$(PYTHON_INTERPRETER) $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP_FILEPATH) $< $@
 swiss_extracts: $(SWISS_EXTRACTS_TIF_FILEPATHS)
 
-## URBAN EXTRACTS (MUNICIPAL + AGGLOMERATION)
+## AGGLOMERATION EXTRACTS
 # variables
 UTILS_PY = swiss_urbanization/data/utils.py
 SETTINGS_PY = swiss_urbanization/data/settings.py
@@ -105,31 +105,9 @@ AGGLOMERATION_EXTRACTS_TIF_FILEPATHS := $(addprefix $(AGGLOMERATION_EXTRACTS_DIR
 		$(foreach CITY_SLUG, $(CITY_SLUGS), \
 			$(CITY_SLUG)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)))
 
-agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_TIF_FILEPATHS)
-
 $(foreach CITY_SLUG, $(CITY_SLUGS), $(eval $(MAKE_AGGLOMERATION_EXTRACT)))
 
-MUNICIPAL_EXTRACTS_DIR = data/processed/municipal_extracts
-MAKE_MUNICIPAL_EXTRACT_PY = swiss_urbanization/data/make_municipal_extract.py
-$(MUNICIPAL_EXTRACTS_DIR):
-	mkdir $(MUNICIPAL_EXTRACTS_DIR)
-
-$(MAKE_MUNICIPAL_EXTRACT_PY): $(UTILS_PY) $(SETTINGS_PY)
-
-define MAKE_MUNICIPAL_EXTRACT
-$(MUNICIPAL_EXTRACTS_DIR)/$(CITY_SLUG)/%.tif: $(SWISS_EXTRACTS_DIR)/%.tif $(GMB_SHP_FILEPATH) $(MAKE_MUNICIPAL_EXTRACT_PY) | $(MUNICIPAL_EXTRACTS_DIR)
-	mkdir -p $$(dir $$@)
-	$(PYTHON_INTERPRETER) $(MAKE_MUNICIPAL_EXTRACT_PY) $(GMB_SHP_FILEPATH) $(CITY_SLUG) $$< $$@
-endef
-
-MUNICIPAL_EXTRACTS_TIF_FILEPATHS := $(addprefix $(MUNICIPAL_EXTRACTS_DIR)/, \
-	$(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
-		$(foreach CITY_SLUG, $(CITY_SLUGS), \
-			$(CITY_SLUG)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)))
-
-municipal_extracts: $(MUNICIPAL_EXTRACTS_TIF_FILEPATHS)
-
-$(foreach CITY_SLUG, $(CITY_SLUGS), $(eval $(MAKE_MUNICIPAL_EXTRACT)))
+agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_TIF_FILEPATHS)
 
 
 ## Plot
