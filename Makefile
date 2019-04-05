@@ -28,12 +28,19 @@ endif
 
 ## Download data
 # variables
-DOWNLOAD_GMB_PY = swiss_urbanization/data/download_gmb.py
+# https://www.bfs.admin.ch/bfs/fr/home/services/geostat/geodonnees-statistique-federale/limites-administratives/limites-communales-generalisees.assetdetail.5247306.html
+# https://www.bfs.admin.ch/bfs/fr/home/services/geostat/geodonnees-statistique-federale/sol-utilisation-couverture/statistique-suisse-superficie/nomenclature-standard.assetdetail.6646411.html
+GMB_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/5247306/master
+SLS_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/6646411/master
+DOWNLOAD_FSO_PY = swiss_urbanization/data/download_fso.py
 DOWNLOAD_CLC_PY = swiss_urbanization/data/download_clc.py
 
 GMB_DIR = data/raw/gmb
 GMB_SHP_BASENAME = g1a18
 GMB_SHP_FILEPATH := $(GMB_DIR)/$(GMB_SHP_BASENAME).shp
+
+SLS_DIR = data/raw/sls
+SLS_CSV_FILEPATH := $(SLS_DIR)/AREA_NOAS04_17_181029.csv
 
 CLC_DIR = data/raw/clc
 CLC_YEAR_CODES = 00 06 12 18
@@ -41,14 +48,21 @@ CLC_TIF_FILEPATHS := $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
 	$(CLC_DIR)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)
 
 # rules
-# rules
 $(GMB_DIR):
 	mkdir $(GMB_DIR)
-$(GMB_DIR)/%.zip: $(DOWNLOAD_GMB_PY) | $(GMB_DIR)
-	$(PYTHON_INTERPRETER) $(DOWNLOAD_GMB_PY) $@
+$(GMB_DIR)/%.zip: $(DOWNLOAD_FSO_PY) | $(GMB_DIR)
+	$(PYTHON_INTERPRETER) $(DOWNLOAD_FSO_PY) $(GMB_URI) $@
 $(GMB_DIR)/%.shp: $(GMB_DIR)/%.zip
 	unzip -j $< 'ggg_2018-LV95/shp/$(GMB_SHP_BASENAME)*' -d $(GMB_DIR)
 	touch $(GMB_SHP_FILEPATH)
+
+$(SLS_DIR):
+	mkdir $(SLS_DIR)
+$(SLS_DIR)/%.zip: $(DOWNLOAD_FSO_PY) | $(SLS_DIR)
+	$(PYTHON_INTERPRETER) $(DOWNLOAD_FSO_PY) $(SLS_URI) $@
+$(SLS_DIR)/%.csv: $(SLS_DIR)/%.zip
+	unzip -j $< '*.csv' -d $(SLS_DIR)
+	touch $(SLS_CSV_FILEPATH)
 
 $(CLC_DIR):
 	mkdir $(CLC_DIR)
@@ -62,6 +76,7 @@ $(CLC_DIR)/%.tif: $(CLC_DIR)/%.zip
 	touch $@
 
 download_gmb: $(GMB_SHP_FILEPATH)
+download_sls: $(SLS_CSV_FILEPATH)
 download_clc: $(CLC_TIF_FILEPATHS)
 
 
