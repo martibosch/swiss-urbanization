@@ -9,7 +9,7 @@ import rasterio.mask as rio_mask
 from dotenv import find_dotenv, load_dotenv
 from slugify import slugify
 
-from swiss_urbanization.data import settings, utils
+from swiss_urbanization.data import settings
 
 
 @click.command()
@@ -42,17 +42,13 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             agglomeration_gser.to_crs(src.crs),
             crop=True,
             nodata=input_nodata)
-        # reclassify it into urban/non-urban LULC
-        # ACHTUNG: `img` will be of shape (1, width, height)
-        output_arr = utils.urban_reclassify_clc(img[0])
 
+        output_arr = img[0]
         output_height, output_width = output_arr.shape
 
         # update the keyword arguments to ouptut the urban extract as a GeoTiff
         kwargs = src.meta.copy()
-        output_dtype = rio.uint8
         kwargs.update({
-            'dtype': output_dtype,
             'width': output_width,
             'height': output_height,
             'transform': transform,
@@ -62,7 +58,7 @@ def main(boundaries_filepath, agglomeration_slug, input_filepath,
             f'writing extract of shape {output_arr.shape} to {output_filepath}'
         )
         with rio.open(output_filepath, 'w', **kwargs) as dst:
-            dst.write(output_arr.astype(output_dtype), 1)
+            dst.write(output_arr, 1)
 
 
 if __name__ == '__main__':
