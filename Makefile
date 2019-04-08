@@ -1,6 +1,6 @@
 .PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
-download_data swiss_extracts agglomeration_extracts figure lint requirements \
-sync_data_to_s3 sync_data_from_s3
+download_data agglomeration_extracts figure lint requirements sync_data_to_s3 \
+sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -33,7 +33,6 @@ endif
 GMB_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/5247306/master
 SLS_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/6646411/master
 DOWNLOAD_FSO_PY = swiss_urbanization/data/download_fso.py
-DOWNLOAD_CLC_PY = swiss_urbanization/data/download_clc.py
 
 GMB_DIR = data/raw/gmb
 GMB_SHP_BASENAME = g1a18
@@ -41,11 +40,6 @@ GMB_SHP_FILEPATH := $(GMB_DIR)/$(GMB_SHP_BASENAME).shp
 
 SLS_DIR = data/raw/sls
 SLS_CSV_FILEPATH := $(SLS_DIR)/AREA_NOAS04_17_181029.csv
-
-CLC_DIR = data/raw/clc
-CLC_YEAR_CODES = 00 06 12 18
-CLC_TIF_FILEPATHS := $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
-	$(CLC_DIR)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)
 
 # rules
 $(GMB_DIR):
@@ -64,42 +58,15 @@ $(SLS_DIR)/%.csv: $(SLS_DIR)/%.zip
 	unzip -j $< '*.csv' -d $(SLS_DIR)
 	touch $(SLS_CSV_FILEPATH)
 
-$(CLC_DIR):
-	mkdir $(CLC_DIR)
-$(CLC_DIR)/%.zip: $(DOWNLOAD_CLC_PY) | $(CLC_DIR)
-	mkdir -p $(dir $@)
-	$(PYTHON_INTERPRETER) $(DOWNLOAD_CLC_PY) $(basename $(notdir $@)) $@
-$(CLC_DIR)/%.tif: $(CLC_DIR)/%.zip
-	unzip $< -d $(dir $@)
-	mv $(dir $@)*.tif $@
-	if [ -f $(dir $@)*.aux ]; then mv $(dir $@)*.aux $(basename $@).aux; fi
-	touch $@
-
 download_gmb: $(GMB_SHP_FILEPATH)
 download_sls: $(SLS_CSV_FILEPATH)
-download_clc: $(CLC_TIF_FILEPATHS)
 
-
-## Swiss extracts
-# variables
-MAKE_SWISS_EXTRACT_PY = swiss_urbanization/data/make_swiss_extract.py
-SWISS_EXTRACTS_DIR = data/interim/swiss_extracts
-SWISS_EXTRACTS_TIF_FILEPATHS :=  $(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), $(SWISS_EXTRACTS_DIR)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)
-
-# rules
-$(SWISS_EXTRACTS_DIR):
-	mkdir $(SWISS_EXTRACTS_DIR)
-$(SWISS_EXTRACTS_DIR)/%.tif: $(CLC_DIR)/%.tif $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP_FILEPATH) | $(SWISS_EXTRACTS_DIR)
-	mkdir -p $(dir $@)
-	$(PYTHON_INTERPRETER) $(MAKE_SWISS_EXTRACT_PY) $(GMB_SHP_FILEPATH) $< $@
-swiss_extracts: $(SWISS_EXTRACTS_TIF_FILEPATHS)
 
 ## AGGLOMERATION EXTRACTS
 # variables
-UTILS_PY = swiss_urbanization/data/utils.py
 SETTINGS_PY = swiss_urbanization/data/settings.py
 
-CITY_SLUGS = basel bern geneve lausanne zurich
+AGGLOMERATION_SLUGS = bern lausanne zurich
 AGGLOMERATION_EXTRACTS_DIR = data/processed/agglomeration_extracts
 MAKE_AGGLOMERATION_EXTRACT_PY = swiss_urbanization/data/make_agglomeration_extract.py
 
@@ -107,35 +74,16 @@ MAKE_AGGLOMERATION_EXTRACT_PY = swiss_urbanization/data/make_agglomeration_extra
 $(AGGLOMERATION_EXTRACTS_DIR):
 	mkdir $(AGGLOMERATION_EXTRACTS_DIR)
 
-$(MAKE_AGGLOMERATION_EXTRACT_PY): $(UTILS_PY) $(SETTINGS_PY)
+$(MAKE_AGGLOMERATION_EXTRACT_PY): $(SETTINGS_PY)
 
-define MAKE_AGGLOMERATION_EXTRACT
-$(AGGLOMERATION_EXTRACTS_DIR)/$(CITY_SLUG)/%.tif: $(SWISS_EXTRACTS_DIR)/%.tif $(GMB_SHP_FILEPATH) $(MAKE_AGGLOMERATION_EXTRACT_PY) | $(AGGLOMERATION_EXTRACTS_DIR)
-	mkdir -p $$(dir $$@)
-	$(PYTHON_INTERPRETER) $(MAKE_AGGLOMERATION_EXTRACT_PY) $(GMB_SHP_FILEPATH) $(CITY_SLUG) $$< $$@
-endef
+$(AGGLOMERATION_EXTRACTS_DIR)/%.csv: $(SLS_CSV_FILEPATH) $(GMB_SHP_FILEPATH) $(MAKE_AGGLOMERATION_EXTRACT_PY) | $(AGGLOMERATION_EXTRACTS_DIR)
+	$(PYTHON_INTERPRETER) $(MAKE_AGGLOMERATION_EXTRACT_PY) $(SLS_CSV_FILEPATH) $(GMB_SHP_FILEPATH) $(basename $(notdir $@)) $@
 
-AGGLOMERATION_EXTRACTS_TIF_FILEPATHS := $(addprefix $(AGGLOMERATION_EXTRACTS_DIR)/, \
-	$(foreach CLC_YEAR_CODE, $(CLC_YEAR_CODES), \
-		$(foreach CITY_SLUG, $(CITY_SLUGS), \
-			$(CITY_SLUG)/$(CLC_YEAR_CODE)/$(CLC_YEAR_CODE).tif)))
+AGGLOMERATION_EXTRACTS_CSV_FILEPATHS := $(addprefix $(AGGLOMERATION_EXTRACTS_DIR)/, \
+	$(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(AGGLOMERATION_SLUG).csv))
 
-$(foreach CITY_SLUG, $(CITY_SLUGS), $(eval $(MAKE_AGGLOMERATION_EXTRACT)))
+agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
 
-agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_TIF_FILEPATHS)
-
-
-## Plot
-# variables
-VISUALIZE_PY = swiss_urbanization/visualization/visualize.py
-FIGURE_FILEPATH = reports/figures/swiss-urbanization.png
-METRICS = fractal_dimension_am edge_density
-
-# rules
-$(VISUALIZE_PY): # requirements
-$(FIGURE_FILEPATH): $(VISUALIZE_PY) $(URBAN_EXTRACTS_FILEPATHS)
-	$(PYTHON_INTERPRETER) $(VISUALIZE_PY) multi-city-plot $(URBAN_EXTRACTS_DIR) $(FIGURE_FILEPATH) --metrics $(METRICS) --year-codes $(CLC_YEAR_CODES) --city-slugs $(CITY_SLUGS)
-figure: $(FIGURE_FILEPATH)
 
 ## Clean Datasets
 clean_raw:

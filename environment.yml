@@ -8,7 +8,8 @@ dependencies:
     - -e .
     - python-dotenv>=0.5.1
     - python-slugify==2.0.1
-    - pylandstats>=0.3.1
+    - pylandstats>=0.4.1
+    - swisslandstats-geopy==0.5.1
     - awscli
   - setuptools
   - wheel
