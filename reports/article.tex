@@ -1,0 +1,400 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in,marginparwidth=2in]{geometry}
+
+% use Unicode characters - try changing the option if you run into troubles with special characters (e.g. umlauts)
+\usepackage[utf8]{inputenc}
+
+% clean citations
+\usepackage{cite}
+
+% hyperref makes references clicky. use \url{www.example.com} or \href{www.example.com}{description} to add a clicky url
+\usepackage{nameref,hyperref}
+
+% line numbers
+\usepackage[right]{lineno}
+
+% improves typesetting in LaTeX
+\usepackage{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+
+% text layout - change as needed
+\raggedright
+\setlength{\parindent}{0.5cm}
+\textwidth 5.25in 
+\textheight 8.75in
+
+% Remove % for double line spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+% use adjustwidth environment to exceed text width (see examples in text)
+\usepackage{changepage}
+
+% adjust caption style
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,singlelinecheck=off]{caption}
+
+% remove brackets from references
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+% headrule, footrule and page numbers
+\usepackage{lastpage,fancyhdr,graphicx}
+\usepackage{epstopdf}
+\pagestyle{myheadings}
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\thepage/\pageref{LastPage}}
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+\fancyheadoffset[L]{2.25in}
+\fancyfootoffset[L]{2.25in}
+
+% use \textcolor{color}{text} for colored text (e.g. highlight to-do areas)
+\usepackage{color}
+
+% define custom colors (this one is for figure captions)
+\definecolor{Gray}{gray}{.25}
+
+% this is required to include graphics
+\usepackage{graphicx}
+
+% use if you want to put caption to the side of the figure - see example in text
+\usepackage{sidecap}
+
+% use for have text wrap around figures
+\usepackage{wrapfig}
+\usepackage[pscoord]{eso-pic}
+\usepackage[fulladjust]{marginnote}
+\reversemarginpar
+
+% for better-looking tables
+\usepackage{booktabs}
+
+% document begins here
+\begin{document}
+\vspace*{0.35in}
+
+% title goes here:
+\begin{flushleft}
+{\Large
+\textbf\newline{Spatiotemporal patterns of urbanization in three Swiss agglomerations: landscape metrics, growth modes and self-organized criticality}
+}
+\newline
+% authors go here:
+\\
+Mart\'i Bosch\textsuperscript{1*},
+J\'er\^ome Chenal\textsuperscript{1},
+St\'ephane Joost\textsuperscript{2,1},
+\\
+\bigskip
+\textbf{1} Urban and Regional Planning Community (CEAT) \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL), Lausanne, Switzerland
+\\
+\textbf{2} Laboratory of Geographic Information Systems (LASIG) \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL), Lausanne, Switzerland
+\\
+\bigskip
+* Corresponding author: marti.bosch@epfl.ch
+
+\end{flushleft}
+
+\section*{Abstract}
+Fitting multiple figures into very tight manuscripts while keeping it pleasant to read is challenging. Therefore figures are often simply attached to the very end of a manuscript file. While easier for the authors, this practice is inconvenient for readers. This \LaTeX template shows how to generate a compiled PDF with figures embedded into the text. It provides several examples of how to embed figures or tables directly into the text thus giving you a range of options from which you should choose the one best suited for your manuscript. Check out Schlegel et al., (2016) as example of use \cite{liu2016general}.
+
+% now start line numbers
+\linenumbers
+
+% the * after section prevents numbering
+\section*{Introduction}
+
+
+\section*{Materials and Methods}
+
+\subsection*{Study area}
+
+\subsection*{Data sources}
+
+% The evolution of the urban agglomeration
+The spatiotemporal evolution of the urban footprint for the three urban agglomerations is displayed in \autoref{figures/landscapes.pdf}.
+
+\begin{figure}[!ht]
+  \begin{adjustwidth}{-.4\textwidth}{0cm}
+    \centering  
+    \includegraphics[width=\linewidth]{figures/landscapes.pdf}
+    \vspace{.5em}
+    \caption[Evolution of urban patches]{\label{figures/landscapes.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich}
+  \end{adjustwidth}
+\end{figure}
+
+\subsection*{Quantifying spatio-temporal patterns of urbanization}
+
+The landscape metrics selected in this study are described in \autoref{selected-metrics}.
+
+\begin{table}[!h]
+  \begin{adjustwidth}{-.4\textwidth}{0cm} % Comment out/remove adjustwidth environment if table fits in text column.
+    \footnotesize % Font size can be changed to match table content. Recommend 10 pt.
+    \renewcommand{\arraystretch}{1.3} % horizontal spacing
+    \centering
+    \caption[Selected landscape metrics]{\label{selected-metrics}Selected landscape metrics to quantify the spatio-temporal patterns of urbanization}
+    \begin{tabular}{p{.34\textwidth} p{.2\textwidth} p{.14\textwidth} p{.6\textwidth}} 
+      \toprule
+      \textbf{Metric name (abbrev.)} & \textbf{Level} & \textbf{Category} & \textbf{Description} \\
+      \midrule
+      Percentage of landscape (PLAND) & Class & Area and edge & Percentage of landscape, in terms of area, occupied by patches of a given class \\
+      Mean patch size (MPS) & Class and landscape & Area and edge & Mean patch size \\
+      Largest patch index (LPI) & Class and landscape & Area and edge & Percentage of the landscape occupied by the largest patch \\
+      Patch density (PD) & Class and landscape & Aggregation & The number of patches per area unit \\
+      Edge density (ED) & Class and landscape & Area and edge & Sum of the lengths of all edge segments per area unit \\
+      Area-weighted mean fractal dimension (AWMFD) & Class and landscape & Shape & Mean patch fractal dimension weighted by relative patch area \\
+      Mean euclidean nearest neighbor distance (ENN) & Class and landscape & Aggregation & Mean patch shortest edge-to-edge distance to the nearest neighboring patch of the same or different class \\
+      Landscape shape index (LSI) & Class and landscape & Aggregation & Standardized ratio of edge length to area \\
+      Contagion (CONTAG) & Landscape & Aggregation & Metric that measures the extent to which patches of the same class are spatially aggregated in the landscape \\
+      Shannon's diversity index (SHDI) & Landscape & Diversity & Metric that measures the diversity of patch types determined by both the number of different patch types and the proportional distribution of area among patch classes. \\
+      % SqP
+      \bottomrule  
+    \end{tabular}
+  \end{adjustwidth}
+\end{table}
+
+\subsection*{Modes of urban growth}
+
+The different growth modes can be detected by means of the Landscape Expansion Index (LEI) \cite{liu2010new}, which is defined as:
+
+\begin{equation}
+  \label{eq:lei}
+  LEI = \frac{A_0}{A_0 + A_v}
+\end{equation}
+
+\subsection*{Fractal order and self-organized criticality}
+
+% % Cities, like many other geographical phenomena, display complex morphological traits. Despite their irregular appearance, comply with well-defined order principles that can be characterized quantitatively through fractal geometry.
+% Cities, like many other geographical phenomena, display complex morphological traits which despite their irregular appearance, comply with well-defined order principles that can be characterized quantitatively.
+
+% \begin{figure}[!ht]
+%   \centering  
+%   \includegraphics[width=\linewidth]{figures/sierpinski.pdf}
+%   \vspace{.5em}
+%   \caption[Sierpinksi carpets]{\label{figures/sierpinski.pdf}Sequence of three Sierpinski carpets generated by iteration over an increasing number of elements (crosses) of decreasing size. Figure inspired by \cite{frankhauser2005morphologie}.}
+% \end{figure}
+
+% Consider the sequence of Sierpinski carpets of \autoref{figures/sierpinski.pdf}. Starting from a single base cross element (iteration $k=1$), the figure generated in the subsequent iteration ($k=2$) is composed by $N=5$ of such cross elements of a size reduced by a $r=1/3$ factor.
+% % Following such procedure, the next iteration (c) generates an object composed of $N=25$ elements whose size is reduced by a $r=1/9$ factor when compared to (a).
+% % Let $L$ represent the length of the initial squares composing the cross of (a), then at a given iteration $k$, there are $N^k$ elements of length $r^k L$.
+% % Notably, the length of the boundary of the generated object increases at each iteration, whereas its surface area decreases.
+% % The way in which this happens has been shown to follow a scaling relation
+% It has been shown that such generated objects follow a scaling relation of the form
+
+% \begin{equation}
+%   \label{eq:fractal-relation}
+%   N^k = r^{-kD}
+% \end{equation}
+
+% so that the fractal dimension $D$, which can be obtained as:
+
+% \begin{equation}
+%   \label{eq:fractal-dimension}
+%   D = - \frac{log (N)}{log (r)}
+% \end{equation}
+
+% is characteristic of the object and remains constant over all iterations.
+
+% % TODO: cite Mandelbrot here
+% Solving this relationship for the Sierpinski carpets of \autoref{figures/sierpinski.pdf} yields $D=1.47$, which reflects the way in which the generated objects are neither two-dimensional like a surface nor one-dimensional like a line, hence the term fractional --- or fractal ---  dimension.
+
+% % Fractal geometry The boundary lengths and
+% Extensive empirical evidence suggests that similar scaling relations exist between the boundary lengths and surface areas of urban patches \cite{frankhauser1994fractalite, batty1994fractal}.
+% % Over the last twenty-five years, 
+% % By analogy of \cite{frankhauser1990aspects}
+% % $A = P^D$
+% % Assuming that a given urban agglomeration is configured around a single centre,
+% % The fractal dimension might therefore serve to describe the rate at which the built-up area of an urban agglomeration increases as the
+
+% Fractal geometry has been extensively employed to describe morphological characteristics of cities and landscapes.
+Cities, like many other geographical phenomena, display complex morphological traits which despite their irregular appearance, comply with well-defined order principles that can be characterized quantitatively by means of fractal geometry.
+% Two recurrent empirical observations are of particular interest in the context of the study of land use change associated to urbanization \cite{white2015modeling}.
+Two main characteristics of fractal structures are of particular interest in the context of the study of urbanization and land use change \cite{white2015modeling}.
+
+\paragraph*{Area-radius scaling}
+% On the one hand, the radial dimension, which describes the relationship between the built-up area of an urban agglomeration and the distance from the main city center, has been shown to empirically conform to the relationship:
+On the one hand, the relationship between the built-up area of an urban agglomeration and the distance from the main city center has been shown to empirically conform to the relationship:
+
+\begin{equation}
+  \label{eq:radial-dimension}
+  A(r) \sim r^D
+\end{equation}
+
+where $A$ denotes the total area of the urban built-up extent that lays within a distance $r$ from the city center, and $D$ corresponds to the radial dimension, analogous to the fractal dimension of two-dimensional complex objects such as Sierpinski carpets.
+% Although the measure might not be appropriate for urban agglomerations with multiple important centers, \cite{frankhauser1994fractalite} found extensive evidence that not only most contemporary cities could be approximated through (\ref{eq:radial-dimension}), but also that with very few exceptions the value of $D$ fell between 1.9 and 2.0.
+Although the measure might not be appropriate for urban agglomerations with multiple important centers, \cite{frankhauser1994fractalite} found extensive evidence that most contemporary cities could be approximated through \autoref{eq:radial-dimension}, with the value of $D$ consistently falling between 1.9 and 2.0.
+% Additionally, as noted first by \cite{frankhauser1990aspects} and confirmed in subsequent examination by \cite{white1993cellular},
+Additionally, following initial observations by \cite{frankhauser1990aspects}, \cite{white1993cellular} suggested that the area-radious scaling could be better approximated throguh two values of $D$, a first steeper one for small values of $r$, reflecting an inner zone where urbanization was essentially complete, and a second lower slope for the outer zone that is still undergoing urbanization.
+
+% TODO: add illustration here
+
+\paragraph*{Patch size-frequency distribution}
+% On the other hand, the size distribution of urban patches
+On the other hand, contemporary urban agglomerations are configured by numerous patches of urban land use.
+% For fractal objects, there must be no characteristic patch size
+% A hallmark of fractal objects is the self-similarity accros scales, which means that there must be no characteristic patch size.
+If such configuration is fractal, there must be no characteristic patch size, and thus the relationship between the size of an urban patch and the number of patches of that size found in the agglomeration must follow a power-law scaling relationship of the form:
+
+\begin{equation}
+  \label{eq:radial-dimension}
+  N(s) \sim s^{-D}
+\end{equation}
+
+where $N(s)$ is the number of patches of size $s$, and the scaling exponent $D$ is the patch size-frequency dimension.
+
+
+\section*{Results}
+
+\subsection*{Time series of landscape metrics}
+
+% TODO: Start by summary
+% Mostly monotonic trends consistent with coalescence stages; Bern and Lausanne almost identical, Zurich shows similar trend but with urbanization being more complete (more PLAND, MPS and LPI, also more edginess and complexity ED, AWMFD, LSI, more connected ENN and CONTAG and more diverse SHDI)
+The computed time series of landscape metrics for the agglomerations of Bern, Lausanne and Zurich are displayed in \autoref{figures/metrics.pdf}.
+% TODO: computed at the agglomeration scale. The sensitivity to the extent has been tested in the supplmentary materials.
+% TODO: as suggested by the demographic trends
+% AREA/SHAPE/EDGE
+The proportion of landscape occupied by urban patches, represented by PLAND has increased monotonically for the three agglomerations. Bern and Lausanne show almost indistinguishable trends, starting from a 13$\%$ in the early 1980s and surpass the 16$\%$ in the last snapshot of 2013 and 2014 respectively. Zurich shows a parallel tendence with the percentage of urbanized land increasing from 22$\%$ in 1982 to a 27$\%$ in 2016.
+The mean area of urban patches and the percentage of area occupied by the largest urban patch, represented respectively by the MPS and LPI metrics, also show a monotonic increase, parallel among the three agglomerations, but again with higher values for Zurich. % TODO: consistent with coalescence, contradicting diversity, fragmentation and complexity hypothesis.
+On the other hand, the density of urban patches, represented by PD, reveals more complex and idiosyncratic trends. % which do not consistently match any of the hypothesis
+A generic tendence to decrease first and increase later might be noted, nevertheless Lausanne undergoes a slight decrease during the last period. 
+The Bern agglomeration shows the highest values, which is also consistent with the agglomeration having the lowest values in MPS and LPI, denoting a landscape configured by numerous but small urban patches.
+Overall, the increases at the latter stages suggest the emergence of new urban patches in a leapfrog manner.
+Despite the irregular trends of PD, the edge density (ED) shows more consistent tendencies of increase in Bern and Lausanne and decrease in Zurich. From the perspective of the diffusion and coalescence hypothesis, Bern and Lausanne are seemingly undergoing a diffusion stage, whereas the decrease of Zurich is more characteristic of coalescence. % Decrease in Zurich contradicts the diversity, fragmentation and complexity as well as the three growth modes hypothesis.
+The flat evolution of ED during the first period in Zurich suggests a transition from diffusion to coalescence, which is also observed in Lausanne during the last period.
+This postulate is also supported by the trend of AWMFD, which in Zurich is almost identical to that of ED, and shows an unimodal pattern for Lausanne, also characteristic of a transition from diffusion to coalescence. The decline of the AWMFD observed during the last period in Bern also suggest that albeit tardier than its counterparts, Bern might also be undergoing a shift towards coalescence.
+% The unimodal trend AWMFD is also consistent with the three growth modes hypothesis.
+The monotonic decrease of the landscape shape index (LSI) reveals that urban patches are becoming increasingly aggregated, which is also characteristic of coalescence. Similarly, the average euclidean nearest-neighbor distance (ENN) shows an overall monotonic decrease which suggests that urban patches are becoming increasingly close in space. % TODO: decrease of LSI contradicts the second group of hypothesis while ENN is consistent with them.
+
+The two metrics that operate at the landscape level, CONTAG and SHDI show consistent monotonic trends which are almost identical for Bern and Lausanne. The decrease in CONTAG is consisting with coalescence, % but also with the increasing diversity, complexity and fragmentation hypothesis.
+while the increase of SHDI denotes an increasing compositional diversity. % as noted by \cite{wu2011quantifying}
+The fact that CONTAG and LSI are respectively lower and higher in Zurich than in Bern or Lausanne suggest that urban patches are less aggregated and more interspersed with non-urban ones, while the higher values of SHDI for Zurich are related to the fact that higher proportion of the landscape is occupied by urban patches and thus the proportional abundance of urban and non-urban pixels is more even than in Bern or Lausanne.
+
+\begin{figure}[ht]
+  \begin{adjustwidth}{-.4\textwidth}{0cm}
+    \centering  
+    \includegraphics[width=\linewidth]{figures/metrics.pdf}
+    \vspace{.5em}
+    \caption[Time series of landscape metrics]{\label{figures/metrics.pdf}Time series of landscape metrics. The eight metrics of the two upper rows are computed at the urban class level, that is, aggregating the values computed for each urban patch. The two metrics of the lower row are computed at the landscape level, that is, considering the patches of all the classes present within the landscape (urban and non-urban in this case)}
+  \end{adjustwidth}
+\end{figure}
+
+
+\subsection*{Growth modes}
+
+The relative dominance of infilling, edge expansion and leapfrog development during the period of study is displayed in \autoref{figures/growth_modes.pdf}.
+% TODO: mention LEI and AWLEI here and in the figure caption
+Overall, considering the influence of growth modes in terms of the number of new urban patches rather than their respective area tends to over-represent the impact of leapfrog, since the new urban patches that appear non-adjacent to existing urban patches tend to be small.
+% As suggested by \cite{li2013quantifying}, edge-expansion maintains its importance throughout the three periods considered for each agglomeration, whereas leapfrog and infilling alternate their relative dominance.
+As suggested by \cite{li2013quantifying}, edge-expansion maintains its importance throughout all agglomerations and time periods, whereas leapfrog and infilling alternate their relative dominance.
+% Nevertheless, the way in which the latter happens does not seem random in the present study but rather suggests a tendence towards increasing infill, more noticeable when considering its influence in terms of area.
+Nevertheless, in the present study, such alternation does not seem to occur randomly but rather suggests a tendence towards increasing infill, more noticeable when considering its influence in terms of area.
+% A potential explanation might stem from the fact that suitable urban land is becoming incresingly scarce.
+% See \nameref{code-sensitivity}.
+
+Likewise for landscape metrics, Bern and Lausanne show similar characteristics, namely an unequivocal dominance of edge-expansion and a slight increase of the area-weighted influence of infilling.
+% On the other hand, the prevalence of edge-expansion and infilling is equally significant in the agglomeration of Zurich, especially in the latter periods.
+On the other hand, leapfrog has very little influence in the agglomeration of Zurich, while the prevalence of edge-expansion and infilling is equally significant, especially in the latter periods.
+As the time series of landscape metrics suggest, the pattern of growth modes observed in Zurich is characteristic of coalescence.
+% Altogether, the evolution of the growth modes the is consistent with the above remarks concerning the time series of landscape metrics and the shift towards coalescence, since
+Similarly, the increasing influence of infilling in Bern and especially in Lausanne are consistent with the transition from diffusion to coalescence that the concave trends of ED and AWMFD seemingly indicate.
+
+\begin{figure}[ht]
+  \begin{adjustwidth}{-.4\textwidth}{0cm}
+    \centering  
+    \includegraphics[width=\linewidth]{figures/growth_modes.pdf}
+    \vspace{.5em}
+    \caption[Three growth modes]{\label{figures/growth_modes.pdf}Changes in the relative dominance of infilling, edge expansion and leapfrog over the three time periods of each urban agglomeration in terms of number of new urban patches (upper row) and their respective area (lower row).}
+  \end{adjustwidth}
+\end{figure}
+
+
+\subsection*{Fractal order and self-organized criticality}
+
+The area-radius scaling and the patch size-frequency distribution of the three urban agglomerations at each temporal snapshot are plotted in \autoref{figures/bifractal_radial_dimension.pdf} and \autoref{figures/self_organized_criticality.pdf} respectively.
+
+\begin{figure}[ht]
+  \begin{adjustwidth}{-.4\textwidth}{0cm}
+    \centering
+    \includegraphics[width=\linewidth]{figures/bifractal_radial_dimension.pdf}
+    \vspace{.5em}
+    \caption[Area-radius scaling]{\label{figures/bifractal_radial_dimension.pdf}Area-radius scaling of the three urban agglomerations at each temporal snapshot. The relationship has been estimated by computing the total area occupied by urban land uses laying within a series of radius values (noted by the cross-shaped markers) from 1000 to 20000m, successively increasing by a step of 1000m. The reference center point has been manually retrieved from the OpenStreetMap\footnotemark} % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
+  \end{adjustwidth}
+\end{figure}
+
+\footnotetext{\url{https://www.openstreetmap.org/}}
+
+% The area-radius scaling relationship is consistent with the bifractal radial city model suggested by \cite{white2015modeling}.
+In line with the observed landscape metrics and growth modes, the urban agglomerations of Bern and Lausanne show similar scaling behavior, with a kink (located around the 3000m radial distance) separating the steeper inner urbanized zone and the outer zone with more non-urban land.
+% Such kink is practically inappreciable within the area-radius scaling of Zurich, which is further characterized by a steeper slope, 
+The area-radius scaling of Zurich is characterized by a steeper slope with practically no appreciable kink, which denotes higher proportion of urban land uses at greater radial distances from the city center.
+At the same time, the curves become steeper through time in all agglomerations, which reflects how they fill the available space as urbanization unfolds.
+Overall, the area-radius scaling curves of Bern and Lausanne are consistent with the bifractal radial city model \cite{white2015modeling}.
+Nevertheless, the temporal evolution of their scaling curves suggests that as they become more urbanized, the kink might attenuate, leading to the almost straight curve observed in Zurich.
+Such an hypothesis seems further supported by the trends of the landscape metrics and growth modes reported above.
+
+% TODO: as patches coalesce
+% TODO: test manual two-slope regression for Bern and Lausanne (~at 3000m) and compare fit
+% TODO: refer to supplementary materials for the regression
+
+\begin{figure}[ht]
+  \begin{adjustwidth}{-.4\textwidth}{0cm}
+    \centering
+    \includegraphics[width=\linewidth]{figures/self_organized_criticality.pdf}
+    \vspace{.5em}
+    \caption[Patch size-frequency distribution]{\label{figures/self_organized_criticality.pdf}Patch size-frequency distribution for the three urban agglomerations  at each temporal snapshot}
+  \end{adjustwidth}
+\end{figure}
+
+% estimation of the scaling parameter: method: maximum likelihood
+%% fit to the power-law form (not whether it is appropriate for the data)
+%% number of patches (sample size should be greater than 50)
+
+% estimating the lower boundary x_min: two methods:
+%% marginal likelihood (for discrete data)
+%% komolgrov-smirnov statistic
+
+% testing powerlaw hypothesis
+%% goodness-of-fit test
+% ``Practically, bootstrapping is more computationally intensive and loglikelihood ratio tests are faster. Philosophically, it is frequently insufficient and unnecessary to answer the question of whether a distribution ‘‘really’’ follows a power law'' (powerlaw, page 5)
+% RESULTS: truncated power law is the best overall fit, followed by a lognormal distribution and then the powerlaw. Nevertheless, the scaling range for the truncated power law is big.
+%% Notes: 1. truncated vs full: No point on overfitting. 2. powerlaw vs lognormal: small patches do not die.
+
+%\clearpage makes sure that all above content is printed at this point and does not invade into the upcoming content
+%\clearpage
+
+\section*{Discussion}
+\subsection*{Subsection heading.}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam bibendum finibus diam, gravida sagittis lorem gravida vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla in diam tristique ante posuere tristique. Donec interdum purus sit amet nisl accumsan consectetur. Fusce aliquet libero mi, quis ornare dolor congue ullamcorper. Nulla nulla urna, molestie in urna sed, lacinia volutpat eros. Ut mi libero, elementum scelerisque ipsum vel, hendrerit fermentum turpis. Aliquam sit amet leo sodales, egestas augue id, fermentum nulla. Aenean vel cursus ante, et pellentesque eros. Nulla ac neque nec justo posuere commodo sit amet sit amet justo. Aliquam tincidunt tempor ex nec tincidunt. In ullamcorper vehicula lobortis. 
+
+%\clearpage
+
+\section*{Supporting Information}
+If you intend to keep supporting files separately you can do so and just provide figure captions here. Optionally make clicky links to the online file using \href{url}{description}.
+
+%These commands reset the figure counter and add "S" to the figure caption (e.g. "Figure S1"). This is in case you want to add actual figures and not just captions.
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+% You can use the \nameref{label} command to cite supporting items in the text.
+\subsection*{Code S1}
+\label{code-sensitivity}
+Exploration of the sensitivity of the time series of landscape metrics to the spatial extent of the urban agglomerations, as Jupyter Notebook (IPYNB).
+\url{https://github.com/martibosch/swiss-urbanization/blob/master/notebooks/sensitivity-extent.ipynb}
+
+
+%\clearpage
+
+\section*{Acknowledgments}
+We thank just about everybody.
+
+\nolinenumbers
+
+%This is where your bibliography is generated. Make sure that your .bib file is actually called library.bib
+\bibliography{references}
+
+%This defines the bibliographies style. Search online for a list of available styles.
+\bibliographystyle{abbrv}
+
+\end{document}
