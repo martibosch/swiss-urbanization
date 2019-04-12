@@ -19,9 +19,12 @@ dependencies:
   - click
   - coverage
   - python=3
+  - basemap=1.2.0
   - boto3=1.9.86
   - tqdm=4.30.0
   - geopandas=0.4.0  
-  - numpy=1.15.4  
+  - numpy=1.15.4
+  - owslib=0.17.1
+  - pillow=6.0.0
   - rasterio=1.0.15
   - scipy=1.2.0
