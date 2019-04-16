@@ -113,14 +113,14 @@ Fitting multiple figures into very tight manuscripts while keeping it pleasant t
 \subsection*{Data sources}
 
 % The evolution of the urban agglomeration
-The spatiotemporal evolution of the urban footprint for the three urban agglomerations is displayed in \autoref{figures/landscapes.pdf}.
+The spatiotemporal evolution of the urban footprint for the three urban agglomerations is displayed in \autoref{figures/landscape_plots.pdf}.
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{-.4\textwidth}{0cm}
     \centering  
-    \includegraphics[width=\linewidth]{figures/landscapes.pdf}
+    \includegraphics[width=\linewidth]{figures/landscape_plots.pdf}
     \vspace{.5em}
-    \caption[Evolution of urban patches]{\label{figures/landscapes.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich}
+    \caption[Evolution of urban patches]{\label{figures/landscape_plots.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich}
   \end{adjustwidth}
 \end{figure}
 
@@ -250,7 +250,7 @@ where $N(s)$ is the number of patches of size $s$, and the scaling exponent $D$ 
 
 % TODO: Start by summary
 % Mostly monotonic trends consistent with coalescence stages; Bern and Lausanne almost identical, Zurich shows similar trend but with urbanization being more complete (more PLAND, MPS and LPI, also more edginess and complexity ED, AWMFD, LSI, more connected ENN and CONTAG and more diverse SHDI)
-The computed time series of landscape metrics for the agglomerations of Bern, Lausanne and Zurich are displayed in \autoref{figures/metrics.pdf}.
+The computed time series of landscape metrics for the agglomerations of Bern, Lausanne and Zurich are displayed in \autoref{figures/metrics_time_series.pdf}.
 % TODO: computed at the agglomeration scale. The sensitivity to the extent has been tested in the supplmentary materials.
 % TODO: as suggested by the demographic trends
 % AREA/SHAPE/EDGE
@@ -273,9 +273,9 @@ The fact that CONTAG and LSI are respectively lower and higher in Zurich than in
 \begin{figure}[ht]
   \begin{adjustwidth}{-.4\textwidth}{0cm}
     \centering  
-    \includegraphics[width=\linewidth]{figures/metrics.pdf}
+    \includegraphics[width=\linewidth]{figures/metrics_time_series.pdf}
     \vspace{.5em}
-    \caption[Time series of landscape metrics]{\label{figures/metrics.pdf}Time series of landscape metrics. The eight metrics of the two upper rows are computed at the urban class level, that is, aggregating the values computed for each urban patch. The two metrics of the lower row are computed at the landscape level, that is, considering the patches of all the classes present within the landscape (urban and non-urban in this case)}
+    \caption[Time series of landscape metrics]{\label{figures/metrics_time_series.pdf}Time series of landscape metrics. The eight metrics of the two upper rows are computed at the urban class level, that is, aggregating the values computed for each urban patch. The two metrics of the lower row are computed at the landscape level, that is, considering the patches of all the classes present within the landscape (urban and non-urban in this case)}
   \end{adjustwidth}
 \end{figure}
 
@@ -311,14 +311,14 @@ Similarly, the increasing influence of infilling in Bern and especially in Lausa
 
 \subsection*{Fractal order and self-organized criticality}
 
-The area-radius scaling and the patch size-frequency distribution of the three urban agglomerations at each temporal snapshot are plotted in \autoref{figures/bifractal_radial_dimension.pdf} and \autoref{figures/self_organized_criticality.pdf} respectively.
+The area-radius scaling and the patch size-frequency distribution of the three urban agglomerations at each temporal snapshot are plotted in \autoref{figures/area_radius_scaling.pdf} and \autoref{figures/size_frequency_distribution.pdf} respectively.
 
 \begin{figure}[ht]
   \begin{adjustwidth}{-.4\textwidth}{0cm}
     \centering
-    \includegraphics[width=\linewidth]{figures/bifractal_radial_dimension.pdf}
+    \includegraphics[width=\linewidth]{figures/area_radius_scaling.pdf}
     \vspace{.5em}
-    \caption[Area-radius scaling]{\label{figures/bifractal_radial_dimension.pdf}Area-radius scaling of the three urban agglomerations at each temporal snapshot. The relationship has been estimated by computing the total area occupied by urban land uses laying within a series of radius values (noted by the cross-shaped markers) from 1000 to 20000m, successively increasing by a step of 1000m. The reference center point has been manually retrieved from the OpenStreetMap\footnotemark} % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
+    \caption[Area-radius scaling]{\label{figures/area_radius_scaling.pdf}Area-radius scaling of the three urban agglomerations at each temporal snapshot. The relationship has been estimated by computing the total area occupied by urban land uses laying within a series of radius values (noted by the cross-shaped markers) from 1000 to 20000m, successively increasing by a step of 1000m. The reference center point has been manually retrieved from the OpenStreetMap\footnotemark} % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
   \end{adjustwidth}
 \end{figure}
 
@@ -340,9 +340,9 @@ Such an hypothesis seems further supported by the trends of the landscape metric
 \begin{figure}[ht]
   \begin{adjustwidth}{-.4\textwidth}{0cm}
     \centering
-    \includegraphics[width=\linewidth]{figures/self_organized_criticality.pdf}
+    \includegraphics[width=\linewidth]{figures/size_frequency_distribution.pdf}
     \vspace{.5em}
-    \caption[Patch size-frequency distribution]{\label{figures/self_organized_criticality.pdf}Patch size-frequency distribution for the three urban agglomerations  at each temporal snapshot}
+    \caption[Patch size-frequency distribution]{\label{figures/size_frequency_distribution.pdf}Patch size-frequency distribution for the three urban agglomerations  at each temporal snapshot}
   \end{adjustwidth}
 \end{figure}
 
@@ -381,7 +381,7 @@ If you intend to keep supporting files separately you can do so and just provide
 \subsection*{Code S1}
 \label{code-sensitivity}
 Exploration of the sensitivity of the time series of landscape metrics to the spatial extent of the urban agglomerations, as Jupyter Notebook (IPYNB).
-\url{https://github.com/martibosch/swiss-urbanization/blob/master/notebooks/sensitivity-extent.ipynb}
+\url{https://github.com/martibosch/swiss-urbanization/blob/master/notebooks/sensitivity_extent.ipynb}
 
 
 %\clearpage
