@@ -1,5 +1,5 @@
 .PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
-download_data agglomeration_extracts figure lint requirements sync_data_to_s3 \
+download_data agglomeration_extracts figures lint requirements sync_data_to_s3 \
 sync_data_from_s3
 
 #################################################################################
@@ -85,6 +85,26 @@ AGGLOMERATION_EXTRACTS_CSV_FILEPATHS := $(addprefix $(AGGLOMERATION_EXTRACTS_DIR
 agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
 
 
+## FIGURES
+# variables
+NOTEBOOKS_DIR = notebooks
+FIGURES_DIR = reports/figures
+FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes area_radius_scaling size_frequency_distribution
+
+# rules
+$(FIGURES_DIR)/%.pdf: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
+	jupyter nbconvert --to notebook --execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
+# special case for the computation of all metrics, which requires time
+$(FIGURES_DIR)/metrics_time_series.pdf: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
+	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook --execute $(NOTEBOOKS_DIR)/metrics_time_series.ipynb 
+
+
+FIGURES_PDF_FILEPATHS := $(addprefix $(FIGURES_DIR)/, \
+	$(foreach FIGURE_BASENAME, $(FIGURE_BASENAMES), $(FIGURE_BASENAME).pdf))
+
+figures: $(FIGURES_PDF_FILEPATHS)
+
+
 ## Clean Datasets
 clean_raw:
 	find data/raw/ ! -name '.gitkeep' -type f -exec rm -f {} +
@@ -102,6 +122,7 @@ clean_processed:
 clean_figures:
 	find reports/figures/ ! -name '.gitkeep' -type f -exec rm -f {} +
 	find reports/figures/ ! -path reports/figures/ -type d -exec rm -rf {} +
+	rm notebooks/*.nbconvert.ipynb
 
 ## Delete all compiled Python files
 clean_py:
