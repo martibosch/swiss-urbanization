@@ -92,11 +92,9 @@ FIGURES_DIR = reports/figures
 FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes area_radius_scaling size_frequency_distribution population_change sls_clc_comparison
 
 # rules
+# set larger timeout than default (some notebooks will need it)
 $(FIGURES_DIR)/%.pdf: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
-	jupyter nbconvert --to notebook --execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
-# special case for the computation of all metrics, which requires time
-$(FIGURES_DIR)/metrics_time_series.pdf: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
-	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook --execute $(NOTEBOOKS_DIR)/metrics_time_series.ipynb 
+	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook --execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
 
 
 FIGURES_PDF_FILEPATHS := $(addprefix $(FIGURES_DIR)/, \
