@@ -89,7 +89,7 @@ agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
 # variables
 NOTEBOOKS_DIR = notebooks
 FIGURES_DIR = reports/figures
-FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes area_radius_scaling size_frequency_distribution population_change sls_clc_comparison
+FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes area_radius_scaling size_frequency_distribution population_change
 
 # rules
 # set larger timeout than default (some notebooks will need it)
