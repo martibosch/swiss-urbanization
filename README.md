@@ -1,57 +1,60 @@
-Spatiotemporal patterns of urbaniztion in Switzerland
+[![Build Status](https://travis-ci.org/martibosch/swiss-urbanization.svg?branch=master)](https://travis-ci.org/martibosch/swiss-urbanization)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martibosch/swiss-urbanization/master?filepath=notebooks)
+
+Spatiotemporal patterns of urbanization in Switzerland
 ==============================
 
-Materials necessary to reproduce the paper
+Materials necessary to reproduce the working paper:
 
-Project Organization
-------------
+Bosch M., Chenal J. 2019. "Spatiotemporal patterns of urbanization in three Swiss urban agglomerations: insights from landscape metrics, growth modes and fractal analysis". Preprint available at bioRxiv. https://doi.org/10.1101/645549
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so `swiss_urbanization` can be imported
-    ├── swiss_urbanization <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes `swiss_urbanization` a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
+![Example figure](figure.png)
 
+## Instructions to reproduce
 
---------
+### Option 1: via MyBinder
+
+Click the badge below, which will use [MyBinder](https://mybinder.org/) to launch a server with a Jupyter executable environment:
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martibosch/swiss-urbanization/master?filepath=notebooks)
+
+### Option 2: locally
+
+1. Clone the repository and change directory to the repository's root:
+
+```bash
+git clone https://github.com/martibosch/swiss-urbanization
+cd swiss-urbanization
+```
+
+2. Create the environment (this requires conda) and activate it:
+
+```bash
+make create_environment
+# the above command creates a conda environment named `swiss-urbanization`
+conda activate swiss-urbanization
+```
+
+3. Register the IPython kernel of the `swiss-urbanization` environment
+
+```bash
+python -m ipykernel install --user --name swiss-urbanization --display-name "Python (swiss-urbanization)"
+```
+
+4. Now you might use `make` to generate all the figures in the directory `reports/figures` as in:
+
+```bash
+make figures
+```
+
+or instead launch Jupyter as in:
+
+```bash
+jupyter-notebook
+```
+
+and generate the figures interactively by executing the notebooks of the `notebooks` directory.
+
+------------------------------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
