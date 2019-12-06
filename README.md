@@ -30,7 +30,7 @@ cd swiss-urbanization
 2. Create the environment (this requires conda) and activate it:
 
 ```bash
-make create_environment
+conda env create --name swiss-urbanization -f environment.yml
 # the above command creates a conda environment named `swiss-urbanization`
 conda activate swiss-urbanization
 ```

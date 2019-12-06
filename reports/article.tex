@@ -58,6 +58,7 @@
 \usepackage{booktabs}
 \usepackage{changepage}
 % \usepackage{geometry}
+\usepackage{subcaption}
 
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
@@ -83,21 +84,27 @@
 
 \titlerunning{Spatiotemporal patterns of urbanization in three Swiss urban agglomerations}        % if too long for running head
 
-\author{Mart\'i Bosch         \and
-        J\'er\^ome Chenal %etc.
+\author{
+  Mart\'i Bosch \and
+  R\'emi Jaligot \and
+  J\'er\^ome Chenal
 }
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{Mart\'i Bosch (\Letter) \and J\'er\^ome Chenal \at
-              Urban and Regional Planning Community (CEAT), \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL), Lausanne, Switzerland \\
-              Tel.: +41 21 69 34435\\
-              % Fax: +123-45-678910\\
-              \email{marti.bosch@epfl.ch}           %  \\
-%             \emph{Present address:} of F. Author  %  if needed
-           \and
-           J\'er\^ome Chenal \at
-              \email{jerome.chenal@epfl.ch}
+\institute{
+  Mart\'i Bosch (\Letter) \and R\'emi Jaligot \and J\'er\^ome Chenal \at
+  Urban and Regional Planning Community (CEAT), \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL), Lausanne, Switzerland \\
+  Tel.: +41 21 69 34435\\
+  % Fax: +123-45-678910\\
+  \email{marti.bosch@epfl.ch}           %  \\
+  % \emph{Present address:} of F. Author  %  if needed
+  \and
+  R\'emi Jaligot \at
+  \email{remi.jaligot@epfl.ch}  
+  \and
+  J\'er\^ome Chenal \at
+  \email{jerome.chenal@epfl.ch}
 }
 
 \date{Received: date / Accepted: date}
@@ -109,20 +116,21 @@
 \begin{abstract}
   \hfill\break
   
-  \emph{Context} % Urbanization is a global phenomenon that has become the most important form of landscape change and is increasingly affecting biodiversity and ecosystem functions.
-  Urbanization is the most important form of landscape change and is increasingly affecting biodiversity and ecosystem functions.
-  Understanding how landscape patterns change in space and time is central to the evaluation of the environmental impacts of urbanization. % and inform urban planning.
+  \emph{Context} Urbanization is the most important form of landscape change and is increasingly affecting biodiversity and ecosystem functions.
+  Understanding how landscape patterns change in space and time is central to the evaluation of the environmental impacts of urbanization.
   
-  \emph{Objectives} This research explores the spatiotemporal patterns of land use change in the urban agglomerations of Zurich, Bern and Lausanne, and compares them to prominent hypotheses of urbanization patterns and to concepts from the complexity sciences. The discussion reviews potential explanations for the observed landscape changes and planning implications.
+  \emph{Objectives} This research explores the spatiotemporal patterns of land use change in the Swiss urban agglomerations of Bern, Lausanne and Zurich at two characteristic spatial extents, and compares them to prominent hypotheses of urbanization patterns. % The discussion reviews potential explanations for the observed landscape changes and planning implications.
   
-  \emph{Methods} For each urban agglomeration, four temporal snapshots from 1980 to 2016 have been derived from the land use inventory of the Swiss Federal Statistical Office. A combination of landscape metrics, urban growth modes and fractal analysis serves to characterize the spatiotemporal patterns of urbanization.
+  \emph{Methods} For each urban agglomeration, four temporal snapshots from 1980 to 2016 have been derived from the land use inventory of the Swiss Federal Statistical Office.
+  % A combination of landscape metrics, urban growth modes and fractal analysis serves to characterize the spatiotemporal patterns of urbanization.
+  By making use of fractal analysis to study the area-radius relationship of urban land, each urban agglomeration is separated into two characteristic urban extents according to the distance of the city center, namely the inner and outer zones. The landscape metrics and growth modes are then computed at such extents. % and used to validate the diffusion and coalescence 
   
-  \emph{Results} The time series of landscape metrics generally supports the diffusion and coalescence model of urban growth, with Zurich exhibiting characteristics of coalescence while Bern and Lausanne seem to be at the transition between diffusion and coalescence.
-  However, the urban growth modes reveal that leapfrog development occurs at all periods, increasingly fragmenting natural patches while maintaining the fractal configuration of the landscape.
-  % The way in which the structural complexity of the landscapes is sustained throughout urbanization is seemingly analogous to dynamic behaviors encountered in a wide range of complex self-organizing systems.
+  \emph{Results} % The fractal analysis of the area-radius relationship
+  The time series of landscape metrics and growth modes reveal fairly different patterns when computed in the inner and outer zones respectively. Bern and Lausanne exhibit mostly traits of coalescence stages at the inner zone while displaying many characteristics of diffusion in the outer zone.
+  % By contrast, Zurich, which is significantly more urbanized at higher distances to the city center and, shows
+  In contrast, the trends of observed in the inner and outer zones of Zurich are both reminiscent of a coalescence of urban patches.
   
-  \emph{Conclusions} The combination of landscape metrics, growth modes, and fractal analysis provides novel insights that are hardly noticeable with any of the approaches individually. The observed landscape complexity is likely related to the distinct planning policies adopted by the various municipalities that configure each urban agglomeration, as well as to residential preferences for low density environments.
-  % Current Federal planning precepts aiming at the concentration growth within the existing urban agglomerations should not overlook the valuable ecosystem services that patches of natural land can provide to urban dwellers.
+  \emph{Conclusions} Fractal analysis of the area-radius relationship can be a useful approach to detect characteristic extents of urban agglomerations at which distinct spatiotemporal patterns might be observed. Current models of urbanization patterns should incorporate the notion of characteristic extents more explicitly.
 
 
 \keywords{Urbanization \and Land use change \and Spatial pattern analysis \and Landscape metrics \and Diffusion and coalescence hypothesis \and Urban growth modes \and Fractals \and Scaling \and Complexity}
@@ -132,22 +140,80 @@
 
 \section*{Introduction}
 
+% context
 The last centuries have seen an unprecedented growth of urban areas, which has resulted in dramatic conversion of natural land and profound changes in landscape patterns and the ecosystem functions that they support \citep{alberti2005effects}.
-The combination of current demographic prospects and the observed trends of decreasing urban densities suggest that the global amount of land occupied by cities might increase threefold \citep{angel2005dynamics}.
-Quantifying urban landscape patterns in space and time is an important and necessary step to understand the driving forces and ecological impacts of urbanization \citep{wu2014urban}. 
+The combination of current demographic prospects and the observed trends of decreasing urban densities suggest that the global amount of land occupied by cities might increase threefold by 2030 \citep{angel2005dynamics}.
+Although the land use and land cover changes associated to urbanization have occurred on less than a 3\% of the earth's terrestrial surface, the environmental footprint of cities has significant implications at the global scale, for their functioning produces 78\% of the earth's greenhouse gases \cite{grimm2008global}.
+% Quantifying urban landscape patterns in space and time is an important and necessary step to understand the driving forces and ecological impacts of urbanization \citep{wu2014urban}.
+Given that urbanization will continue to be a major form of landscape change in the next decades, quantifying urban landscape patterns in space and time is crucial to understand the driving forces and ecological impacts of urbanization \citep{wu2014urban}. 
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % the morphology and evolution of cities
+% % - location theory, gradient analysis, fractals: however, cities change in time, out-of-equilibrium
+% % - spatiotemporal patterns and hypotheses
+% % The study of urban morphology has been a central subject of interest for geographers and economists, especially following the spatial land-use model of \cite{von1826isolirte}.
+% Understanding the spatial organization of cities is a subject of central interest in geography as well as other related disciplines.
+% Following the seminal land-use model of \cite{von1826isolirte}, economists have developed a set of location theories with the aim of predicting the spatial distribution of economic activity and land use as a function of the distance to the city centers \citep{burgess1925growth,christaller1933zentralen,losch1954economics,alonso1964location}.
+% % ``While many studies have found empirical correlations between environmental performance and aggregate measures of urbanization such as density or the extent of the built-up area, such measures do not reflect the complexity and diversity of existing urban patterns, and are strongly affected by the different definitions of city boundaries \cite{alberti1999urban}'' from \cite{bosch2019addressing}
+% % Nevertheless, traditional density-based measures are unsuitable to describe the spatial complexity of the urban patterns observed in contemporary cities.
+% Nevertheless, while traditional location theories are capable of predicting the land use changes and urban density decays as one moves away from the urban core, they fail to explain the complex patterns and fragmentation observed in the urban-rural fringe of contemporary cities \citep{irwin2002interacting}.
+% % Besides density, measuring the complex spatial geometry of urban sprawl
+% In response to such shortcoming, recent approaches to measure urban sprawl have built upon metrics from landscape ecology and fractal geometry \citep{frenkel2008measuring,torrens2008toolkit,bosch2019addressing}.
+% % Paralleling the advances in location theory
+% % On the other hand, during the last three decades, ecologists have largely built upon the gradient paradigm to evaluate how the environmental characteristics vary with decreasing human influence as one moves away from the urban cores \citep{mcdonnell1990ecosystem,medley1995forest,carreiro2005forest,mcdonnell2008ecosystem}.
+
+% % TODO: intro to landscape ecology
+% % The main focus of landscape ecology is the study of how the spatial pattern of landscapes affects the ecological processes that occur upon them \cite{turner1989landscape,pickett1995landscape}.
+% The landscape ecology perspective views landscapes as an heterogeneous spatial mosaic of biological and physical patches, where the size, shape and configuration of patches exerts a strong influence on key ecosystem functions such as biodiversity and fluxes of organisms and materials \citep{turner1989landscape,pickett1995landscape}.
+% In order to quantify such pattern-process relationships, a series of landscape metrics have been developed in order to the quantify the composition and configuration of landscapes and monitor their change through time \citep{o1988indices,turner1990spatial,mcgarigal2012fragstats}.
+% % with large environmental footrprints
+% From this standpoint, urban landscapes might be seen as patchy ecosystems, whose spatiotemporal evolution is strongly altered by human action \citep{pickett1997conceptual,collins2000new,zipperer2000application,wu2008making,mcphearson2016advancing}.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 Recent decades have witnessed an increasing number of studies of the spatiotemporal patterns of land use change associated to urbanization \citep{dietzel2005spatio, seto2005quantifying, schneider2008compact, jenerette2010global, wu2011quantifying, li2013quantifying, liu2016general, nong2018quantifying}.
-Initial attempts to synthesis suggested that urbanization can be characterized as a two-step alternating process of diffusion and coalescence \citep{dietzel2005spatio, schneider2008compact}, nonetheless, subsequent studies challanged the empirical validity of such hypothesis.
-On the one hand, \cite{jenerette2010global} examined the spatiotemporal patterns of land use change of a sample of 120 cities distributed throughout the world from 1990 to 2000, and determined that overall, urbanization leads to fragmented landscapes with more complex and heterogeneous structures. On the other hand, \cite{li2013quantifying} determined that the two-phase diffusion and coalescence model can be over-simplistic and that urbanization might be better characterized by means of three growth modes, namely infilling, edge expansion and leapfrogging, which operate simoultaneously while alternating their relative dominance.
+Building upon previous ideas of urban growth phases and wave-like urban development, initial attempts to synthesis suggested that urbanization can be characterized as a two-step alternating process of diffusion and coalescence \citep{dietzel2005spatio, schneider2008compact}. Nonetheless, subsequent studies challanged the empirical validity of such hypothesis.
+% On the one hand
+The thorough study of \cite{jenerette2010global} examined the spatiotemporal patterns of land use change of a sample of 120 cities distributed throughout the world from 1990 to 2000, and determined that overall, urbanization leads to fragmented landscapes with more complex and heterogeneous structures.
+Similarly, in a comparative analysis of the metropolitan regions of Phoenix and Las Vegas, \cite{wu2011quantifying} revealed that throughout the 20th century, the two agglomerations did not display signs of distinct urban growth phases, but instead showed a strikingly similar trend towards a landscape that is more diverse in land use, fragmented in structure and complex in shape.
+% On the other hand
+Subsequently, \cite{li2013quantifying} determined that the two-phase diffusion and coalescence model can be over-simplistic and that urbanization might be better characterized by means of three growth modes, namely infilling, edge expansion and leapfrogging, which operate simoultaneously while alternating their relative dominance.
+Such results were confirmed by the thorough study of 16 world cities over the 1800-2000 period by \cite{liu2016general}, who further resolved that urbanization generally leads to an increasingly diverse and complex landscape.
 
-Paralleling the above studies, approaches from the complexity sciences have provided novel insights into the spatial organization that underpins contemporary cities \citep{batty2005cities}.
-Like many other complex systems, cities exhibit morphological traits that are consistent with fractal geometry and reflect the self-organizing nature of the processes that occur upon them \citep{white1993cellular}.
-Although the scaling relationships of fractal geometry suggest the existence of strong morphological regularities over a wide variety of cities and regions \citep{frankhauser1994fractalite, batty1994fractal, white2015modeling}, their meaning in the context of the spatiotemporal patterns of urbanization remains unclear \citep{li2000fractal, manson2006complexity, bosch2019addressing}.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % TODO: introduce the hierarchy idea: ``City morphology is reflected in a hierarchy of different subcenters or clusters accross many scales, from the entire city to neighborhoods, organized around key economic functions'' \cite{batty2008size}. Also \cite{wu1995balance, liu2014much}.
+% % ``Because urban systems are multi-scaled, social-ecological systems, a hierarchical approach is needed for understanding their structure, function and dynamics'' \cite{li2013quantifying}. See also \cite{pickett1997conceptual}
+% % TODO: 
+% % TODO: maybe remove the ``classic location theory'' part. But note \cite{white2015modeling}: despite complexity, cities are configured by concentric rings. Also note in discussion that as Swiss agglomerations fuse, the concentric model is very likely to "not hold" and a poly-centric (e.g., multi-fractal) model must be considered.
+% Understanding the spatial organization of cities is a subject of central interest in geography as well as other related disciplines.
+% % Following the seminal land-use model of \cite{von1826isolirte}, economists have developed a set of location theories with the aim of predicting the spatial distribution of economic activity and land use as a function of the distance to the city centers \citep{burgess1925growth,christaller1933zentralen,losch1954economics,alonso1964location}.
+% Following the seminal land-use model of \cite{von1826isolirte}, economists have developed a set of location theories with the aim of predicting the spatial distribution of economic activity and land use in human settlements \citep{burgess1925growth,christaller1933zentralen,losch1954economics,alonso1964location}.
+% % However, while traditional location theories are capable of predicting the land use changes and urban density decays as one moves away from the urban core, they fail to explain the complex patterns and fragmentation observed in the urban-rural fringe of contemporary cities \citep{irwin2002interacting}.
+% However, while traditional location theories are capable of reproducing the land use changes and urban density decays as one moves away from the urban core, they fail to explain the spatial complexity encountered in contemporary cities.
+% % Despite apparent complexity and diversity
+% % Paralleling the above studies, approaches from the complexity sciences have provided novel insights into the spatial organization that underpins contemporary cities \citep{batty2005cities}.
+% In response to such shortcomings, during the last decades the study of urban morphology has increasingly borrowed from concepts from the complexity sciences \citep{batty2005cities, white2015modeling}.
+% % Like many other complex systems, cities exhibit morphological traits that are consistent with fractal geometry and reflect the self-organizing nature of the processes that occur upon them \citep{white1993cellular}.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TODO: Current hypothesis of spatiotemporal patterns of urbanization either overlook that cities show distinct spatial patterns depending on the distance to the city center (diffusion and coalescence), or consider it by making use of artificial extents, i.e., administrative boundaries (three growth modes).
+% administrative boundaries are ``constructed  manually case-by-case based on subjective judgement'' \cite[page 18702]{rozenfeld2008laws}
+% Nevertheless, such spatiotemporal models of urbanization missappreciate the way in which cities show distinct spatial signatures along the urban-rural gradient. On the one hand, such notion is entirely overlooked in the formulation of the diffusion and coalescence model by \cite{dietzel2005spatio}. On the other hand, although \cite{li2013quantifying} employed a hierarchical framework of three nested spatial extents in order to test their three growth modes hypothesis, their choice of extents is based on administrative boundaries, which are constructed manually case-by-case and often based on subjective judgement and might thus lead to equivocal results \citep{wolman2005fundamental,rozenfeld2008laws, liu2014much, oliveira2014large}.
+Nevertheless, such models of urbanization missappreciate the way in which contemporary cities are multi-scaled systems, organized in different levels that show its own characteristic spatiotemporal patterns \citep{batty2005cities, batty2008size, white2015modeling}.
+While both the diffusion and coalescence model of \cite{dietzel2005spatio} and the three growth modes model of \cite{li2013quantifying} make use of a hierarchical framework and evaluate the spatial patterns at different extents, the choice of such extents is not based on quantitative criteria and neglects the characteristic scales of complex systems such as urban patterns.
+Despite the apparent complexity and diversity of urban forms, cities comply with well-defined principles of spatial organization, which can be characterized quantitatively by means of fractal geometry.
+% Although the scaling relationships of fractal geometry suggest the existence of strong morphological regularities over a wide variety of cities and regions \citep{frankhauser1994fractalite, batty1994fractal, white2015modeling}, their meaning in the context of the spatiotemporal patterns of urbanization remains unclear \citep{li2000fractal, manson2006complexity, bosch2019addressing}.
+% More precisely, the relationship between the total built-up area and the distance from the city center has been shown to empirically follow a scaling relationship with very stable exponents for a wide variety of cities \citep{frankhauser1994fractalite, batty1994fractal}.
+A remarkable regularity is found in the relationship between the total built-up area and the distance from the city center, which has been shown to empirically follow a scaling law with very stable exponents for a wide variety of cities \citep{frankhauser1994fractalite, batty1994fractal}.
+% Like classic location theory, fractal geometry models how space is filled as one moves away from the city center, a characteristic that can hardly be discerned by landscape metrics and growth modes. Yet unlike traditional density curves, fractal geometry is also capable of reproducing the complex and fragmented shapes encountered at the urban-rural fringe of contemporary cities.
+% Further examination by \cite{white1993cellular} suggested that the area-radius scaling could be better approximated throguh two scaling exponents, a first steeper one for small distances to the city center, reflecting an inner zone where urbanization was essentially complete, and a second lower slope for the outer zone that is still undergoing urbanization.
+In a thorough examination of a global sample of cities, \cite{frankhauser1994fractalite} noted the existence of a kink in the area-radius relationship, which reveals a change on the spatial structure of cities at a certain distance from their center.
+The same pattern was found in the urban cellular automata simulations of \cite{white1993cellular}, suggesting that the area-radius scaling could be better approximated throguh two scaling exponents, a first steeper one for small distances to the city center, reflecting an inner zone where urbanization was essentially complete, and a second lower slope for the outer zone that is still undergoing urbanization.
 
-This paper intends to evaluate the spatiotemporal patterns of land use change observed in three of the largest Swiss urban agglomerations from three different perspectives, namely landscape metrics, urban growth modes and fractal analysis. 
-The objective of this paper is twofold.
-The first is to assess to test whether the spatiotemporal evolution of the three agglomerations conform to the diffusion and coalescence dichotomy, the second is to explore how the three adopted perspectives complement each other.
-The results will serve to discuss planning implications regarding the desirability of the recent densification policies adopted in Switzerland.
+The objective of this study is therefore to build upon fractal analysis in order to enlighten the current hypotheses of the spatiotemporal patterns of urbanization.
+More precisely, the area-radius relationship will be used to detect characteristic extents in urban agglomerations, such as the inner and outer zones reviewed above.
+Thereupon, the time series of landscape metrics and growth modes will be computed at such extents in order to evaluate the degree to which the spatiotemporal patterns of urbanization operate differently at each scale.
+The results will serve assess the validity of the diffusion and coalescence and three growth modes hypothesis and provide critical insights into how they could be revised from a multi-scale perspective.
+
 
 \section*{Materials and Methods}
 
@@ -161,7 +227,7 @@ In line with the country's federalist government structure, the Swiss spatial pl
 While the Federal Statue on regional planning of 1979 limited the number of new buildings constructed outside the building zones, built-up areas have since increased continuously, mainly because the municipalities can designate new building zones almost entirely autonomously \citep{jaeger2014improving}. A major revision of the Federal Statue was accepted in 2013, which limits the amount of building zones that municipalities can designate and encourages infill development and densification by means of tax incentives.
 Forecasts based on the current urbanization trends predict significant increases of urban land use demands over the next decades, mostly at the expense of agricultural land located at the fringe of existing urban agglomerations \citep{price2015future}.
 
-Given that a significant part of the cross-border urban agglomerations of Geneva and Basel (the second and third largest in Switzerland) lie beyond the Swiss boundaries \mycitep{sfso2014espace}, in order to ensure coherence of the land use/land cover data (see the section below), this study comprises only three of the five largest Swiss urban agglomerations, namely Zurich, Bern and Lausanne \mycitep{sfso2018city}.
+Given that a significant part of the cross-border urban agglomerations of Geneva and Basel (the second and third largest in Switzerland) lie beyond the Swiss boundaries \mycitep{sfso2014espace}, in order to ensure coherence of the land use/land cover data, this study comprises only three of the five largest Swiss urban agglomerations, namely Bern, Lausanne and Zurich \mycitep{sfso2018city}.
 As shown in \autoref{figures/population_change.pdf}, the three agglomerations have undergone important population growth over the last 30 years, especially during the most recent years and at the agglomeration extent.
 With a total population over 1.3 million and land area of 1305 km$^2$ (1038 hab/km$^2$), Zurich is the largest Swiss urban agglomeration. As a leading global city and one of the world's largest financial centers, Zurich has the country's largest airport and railway station, and also hosts the largest Swiss universities and higher education institutions. 
 Bern is the capital of Switzerland and fourth most populous urban agglomeration in Switzerland, with a total population of 410000 inhabitants and occupying a land area of 783 km$^2$ (531 hab/km$^2$). As the fifth largest Swiss urban agglomeration and the second most important student and research center after Zurich, the Lausanne agglomeration has a total population of 409000 inhabitants over a land area of 773 km$^2$ (537 hab/km$^2$). Given its larger population growth rate, Lausanne is likely to soon surpass Bern and become the fourth largest urban agglomeration in Switzerland.
@@ -195,45 +261,102 @@ The spatiotemporal evolution of the urban footprint for the three selected urban
     \centering  
     \includegraphics[width=\linewidth]{figures/landscape_plots.pdf}
     % \vspace{.5em}
-    \caption[Evolution of urban patches]{\label{figures/landscape_plots.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich}
+    \caption[Evolution of urban patches]{\label{figures/landscape_plots.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich.}
   \end{adjustwidth}
 \end{figure}
 
 
+% \subsection*{Fractal aspects of urban patterns}
+\subsection*{Area-radius scaling in urban agglomerations}
+
+% Despite their complex and irregular appearance, cities comply with well-defined order principles that can be characterized quantitatively by means of fractal geometry \citep{frankhauser1994fractalite, batty1994fractal}.
+% Two main characteristics of fractal structures are of particular interest in the context of the study of urbanization and land use change \citep{white2015modeling}: the area-radius scaling and the size-frequency distribution of urban patches.
+% In order to evaluate how each agglomeration fills the available space, fractal geometry will be employed to study the relationship between the built-up area of an urban agglomeration and the distance from the main city center.
+In order to quantitatively detect characteristic spatial extents of urban agglomerations, the relationship between the built-up area and the distance form the main city center will be evaluated from the perspective of fractal geometry.
+% \paragraph*{Area-radius scaling} \hspace{0cm} % force line break
+% The relationship between the built-up area of an urban agglomeration and the distance from the main city center has been shown (e.g., \cite{frankhauser1994fractalite}) to empirically conform to relationships of the form:
+% More precisely, it has been shown, e.g., by \cite{frankhauser1994fractalite}, that such relationship can be empirically approximated as in:
+% For fractal objects, such relationship should follow a scaling rule of the form:
+If cities are to be considered fractal objects, such relationship should follow a scaling rule of the form \citep{mandelbrot1983fractal}:
+
+\begin{equation}
+  \label{eq:radial-dimension}
+  A(r) \sim r^D
+\end{equation}
+
+where $A$ denotes the total area of the urban built-up extent that lays within a distance $r$ from the city center, and $D$ corresponds to the radial dimension, analogous to the fractal dimension of two-dimensional complex objects such as Sierpinski carpets.
+% Although the measure might not be appropriate for urban agglomerations with multiple important centers, \cite{frankhauser1994fractalite} found extensive evidence that most contemporary cities could be approximated through (\ref{eq:radial-dimension}), with the value of $D$ consistently falling between 1.9 and 2.0.
+
+% On the other hand, following initial observations by \cite{frankhauser1990aspects}, \cite{white1993cellular} suggested that the area-radius scaling could be better approximated throguh two values of $D$, a first steeper one for small values of $r$, reflecting an inner zone where urbanization was essentially complete, and a second lower slope for the outer zone that is still undergoing urbanization.
+% Therefore, in order to evaluate whether the area-radius relationship should be fit by one or two curves, the coefficient of determination of a piecewise linear regression with two segments will be compared to that of a simple linear regression. The optimal breakpoint of the two-segment regression, namely, the breakpoint location that minimizes the sum of squared residual will be computed with the \texttt{pwlf} Python library\footnote{See \url{https://github.com/cjekel/piecewise_linear_fit_py}}, which is based on the Differential Evolution (DE) optimization algorithm \citep{storn1997differential}.
+With the aim of assessing whether the urban agglomerations follow the bi-fractal city model suggested by \cite{white1993cellular}, a piecewise linear regression with two segments will be compared to that of a simple linear regression. The optimal breakpoint of the two-segment regression, namely, the breakpoint location that minimizes the sum of squared residual will be computed with the \texttt{pwlf} Python library\footnote{See \url{https://github.com/cjekel/piecewise_linear_fit_py}}, which is based on the differential evolution optimization algorithm \citep{storn1997differential}.
+In this context, such breakpoint corresponds to the kink in the area-radius scaling noted by \cite{frankhauser1994fractalite}, namely the radial distance to the city center at which cities show a distinct spatial structure that is less space-filling.
+% In order to evaluate the signatures that the spatiotemporal patterns of urbanization show at different spatial extents, the metrics will be computed at three spatial extents. The first correspond to the whole urban agglomeration, as defined by the SFSO \mycitep{sfso2014espace}. Following the fractal analysis of the area-radius scaling, the inner zone, defined as the
+% In consonance with the multi-scale perspective
+Thereupon, three spatial extents will be considered in the analysis of the spatiotemporal patterns of urbanization. The first extent corresponds to the whole urban agglomeration defined by the SFSO \mycitep{sfso2014espace}, which is described in the foregoing section. The second and third extents will be derived from the location of the kink, i.e., the breakpoint of the two-segment regression of the area-radius relationship. More precisely, in line with \cite{white1993cellular}, the second extent will be defined as the inner zone, i.e., a circle with with the city core as center and the breakpoint distance as radius, while the third extent will be defined as the outer zone, i.e., the area that lies outside the inner zone circle and the agglomeration boundaries.
+
+% \paragraph*{Size-frequency distribution of urban patches} \hspace{0cm} % force line break
+
+% Contemporary urban agglomerations are configured by numerous patches of urban land use.
+% If such configuration is fractal, there must be no characteristic patch size, and thus the relationship between the size of an urban patch and the number of patches of that size found in the agglomeration must follow a power-law scaling relationship of the form:
+
+% \begin{equation}
+%   \label{eq:size-frequency}
+%   N(s) \sim s^{-\alpha}
+% \end{equation}
+
+% where $N(s)$ is the number of patches of size $s$, and the scaling exponent $\alpha$ is the patch size-frequency dimension \citep{white1993cellular}.
+
+
 \subsection*{Quantifying spatiotemporal patterns of urbanization}
 
-While a plentiful collection of landscape metrics can be find in the literature, many of them are highly correlated with one another. As a matter of fact, \cite{riitters1995factor} found that the characteristics discerned by 55 prevalent landscape metrics could be reduced to only 6 independent factors.
+\subsubsection*{Time series of landscape metrics}
+
+While a plentiful collection of landscape metrics can be found in the literature, many of them are highly correlated with one another. As a matter of fact, \cite{riitters1995factor} found that the characteristics discerned by 55 prevalent landscape metrics could be reduced to only 6 independent factors.
 On the other hand, landscape metrics can be very sensitive to the resolution and the extent of the maps. However, several metrics empirically exhibit consistent responses to changing scales that conform to predictable scaling relations \citep{wu2002empirical, wu2004effects}.
 Based on such remarks, and in order to enhance comparability with other studies, ten landscape metrics have been selected for the present study, whose details are listed in \autoref{selected-metrics}.
-While complying with the FRAGSTATS v4 definitions \citep{mcgarigal2012fragstats}, the landscape metrics have been computed with the open source library PyLandStats \citep{bosch2019pylandstats}.
-Like in most of the related studies, the categorical maps have been reclassified into urban and natural classes, and the metrics have computed at the urban class level, namely aggregating their values across all the urban patches of the landscape. The only exceptions are the contagion (CONTAG) and Shannon's diversity index (SHDI), which can only be computed at the landscape level, namely considering all the landscape classes (urban and natural in the this study).
-Pixels that correspond to land unavailable for development, such as water bodies, have been excluded from the computation of the metrics.
 
 \begin{table}[!h]
   % \begin{adjustwidth}{-.4\textwidth}{0cm} % Comment out/remove adjustwidth environment if table fits in text column.
-    \footnotesize % Font size can be changed to match table content. Recommend 10 pt.
-    \renewcommand{\arraystretch}{1.3} % horizontal spacing
-    \centering
-    \caption[Selected landscape metrics]{\label{selected-metrics}Selected landscape metrics to quantify the spatiotemporal patterns of urbanization. A more thorough description can be found in the documentation of the software FRAGSTATS v4 \citep{mcgarigal2012fragstats}}
-    \begin{tabular}{p{.34\textwidth} p{.2\textwidth} p{.14\textwidth} p{.6\textwidth}} 
-      \toprule
-      \textbf{Metric name (abbrev.)} & \textbf{Level} & \textbf{Category} & \textbf{Description} \\
-      \midrule
-      Percentage of landscape (PLAND) & Class & Area and edge & Percentage of landscape, in terms of area, occupied by patches of a given class \\
-      Mean patch size (MPS) & Class and landscape & Area and edge & Mean patch size \\
-      Largest patch index (LPI) & Class and landscape & Area and edge & Percentage of the landscape occupied by the largest patch \\
-      Patch density (PD) & Class and landscape & Aggregation & The number of patches per area unit \\
-      Edge density (ED) & Class and landscape & Area and edge & Sum of the lengths of all edge segments per area unit \\
-      Area-weighted mean fractal dimension (AWMFD) & Class and landscape & Shape & Mean patch fractal dimension weighted by relative patch area \\
-      Mean euclidean nearest neighbor distance (ENN) & Class and landscape & Aggregation & Mean patch shortest edge-to-edge distance to the nearest neighboring patch of the same or different class \\
-      Landscape shape index (LSI) & Class and landscape & Aggregation & Standardized ratio of edge length to area \\
-      Contagion (CONTAG) & Landscape & Aggregation & Metric that measures the extent to which patches of the same class are spatially aggregated in the landscape \\
-      Shannon's diversity index (SHDI) & Landscape & Diversity & Metric that measures the diversity of patch types determined by both the number of different patch types and the proportional distribution of area among patch classes. \\
-      % SqP
-      \bottomrule  
-    \end{tabular}
+  \footnotesize % Font size can be changed to match table content. Recommend 10 pt.
+  \renewcommand{\arraystretch}{1.5} % vertical spacing
+  \centering
+  \caption[Selected landscape metrics]{\label{selected-metrics}Selected landscape metrics to quantify the spatiotemporal patterns of urbanization. A more thorough description can be found in the documentation of the software FRAGSTATS v4 \citep{mcgarigal2012fragstats}}
+  % \begin{tabular}{p{.3\textwidth} p{.22\textwidth} p{.16\textwidth} p{.6\textwidth}} 
+  %   \toprule
+  %   \textbf{Metric name (abbrev.)} & \textbf{Level} & \textbf{Category} & \textbf{Description} \\
+  %   \midrule
+  %   %   Percentage of landscape (PLAND) & Class & Area and edge & Percentage of landscape, in terms of area, occupied by patches of a given class \\
+  %   %   Mean patch size (MPS) & Class and landscape & Area and edge & Mean patch size \\
+  %   %   Largest patch index (LPI) & Class and landscape & Area and edge & Percentage of the landscape occupied by the largest patch \\
+  %   Patch density (PD) & Class and landscape & Aggregation & The number of patches per area unit \\
+  %   Edge density (ED) & Class and landscape & Area and edge & Sum of the lengths of all edge segments per area unit \\
+  %   Area-weighted mean fractal dimension (AWMFD) & Class and landscape & Shape & Mean patch fractal dimension weighted by relative patch area \\
+  %   Mean euclidean nearest neighbor distance (ENN) & Class and landscape & Aggregation & Mean patch shortest edge-to-edge distance to the nearest neighboring patch of the same or different class \\
+  %   %   Landscape shape index (LSI) & Class and landscape & Aggregation & Standardized ratio of edge length to area \\
+  %   %   Contagion (CONTAG) & Landscape & Aggregation & Metric that measures the extent to which patches of the same class are spatially aggregated in the landscape \\
+  %   %   Shannon's diversity index (SHDI) & Landscape & Diversity & Metric that measures the diversity of patch types determined by both the number of different patch types and the proportional distribution of area among patch classes. \\
+  %   \bottomrule  
+  % \end{tabular}
+  \begin{tabular}{p{.28\textwidth} p{.16\textwidth} p{.46\textwidth}} 
+    \toprule
+    \textbf{Metric name} & \textbf{Category} & \textbf{Description} \\
+    \midrule
+    Percentage of landscape (PLAND) & Area and edge & Percentage of landscape, in terms of area, occupied by patches of a given class \\
+    Patch density (PD) & Aggregation & The number of patches per area unit \\
+    Edge density (ED) & Area and edge & Sum of the lengths of all edge segments per area unit \\
+    Area-weighted mean fractal dimension (AWMFD) & Shape & Mean patch fractal dimension weighted by relative patch area \\
+    Mean euclidean nearest neighbor distance (ENN) & Aggregation & Mean patch shortest edge-to-edge distance to the nearest neighboring patch of the same or different class \\
+    \bottomrule  
+  \end{tabular}    
   % \end{adjustwidth}
 \end{table}
+
+While complying with the FRAGSTATS v4 definitions \citep{mcgarigal2012fragstats}, the landscape metrics have been computed with the open source library PyLandStats \citep{bosch2019pylandstats}.
+Like in most of the related studies, the categorical maps have been reclassified into urban and natural classes, and the metrics have computed at the urban class level, namely aggregating their values across all the urban patches of the landscape.
+% The only exceptions are the contagion (CONTAG) and Shannon's diversity index (SHDI), which can only be computed at the landscape level, namely considering all the landscape classes (urban and natural in the this study).
+% The only exception is the contagion index (CONTAG), which can only be computed at the landscape level, namely considering all the landscape classes (urban and natural in the this study).
+Pixels that correspond to land unavailable for development, such as water bodies, have been excluded from the computation of the metrics.
 
 \subsubsection*{Modes of urban growth}
 
@@ -248,193 +371,208 @@ To that end, for each new urban patch, the Landscape Expansion Index (LEI) is co
 
 where $L_c$ denotes the length of the interface between the new urban patch and pre-existing urban patches, and $P$ is the perimeter of the new urban patch. Then, the type urban growth attributed to a new urban patch will be identified as infilling when $LEI > 0.5$, edge-expansion when $0 < LEI \leq 0.5$ and leapfrog when $LEI = 0$.
 % As suggested by \cite{li2013quantifying}, the relative dominance of each growth mode between two time points can be evaluated through the proportion of new urban patches that are attributed to each growth mode, both in terms of number and area of new urban patches.
-As suggested by \cite{li2013quantifying}, the relative dominance of each growth mode between two landscape snapshots can be evaluated both in terms of number and the area of new urban patches that are attributed to each growth mode.
+% As suggested by \cite{li2013quantifying}, the relative dominance of each growth mode between two landscape snapshots can be evaluated both in terms of number and the area of new urban patches that are attributed to each growth mode.
 
-\subsubsection*{Fractal aspects of urban patterns}
-
-Despite their complex and irregular appearance, cities comply with well-defined order principles that can be characterized quantitatively by means of fractal geometry \citep{frankhauser1994fractalite, batty1994fractal}.
-Two main characteristics of fractal structures are of particular interest in the context of the study of urbanization and land use change \citep{white2015modeling}: the area-radius scaling and the size-frequency distribution of urban patches.
-
-\paragraph*{Area-radius scaling} \hspace{0cm} % force line break
-
-The relationship between the built-up area of an urban agglomeration and the distance from the main city center has been shown (e.g., \cite{frankhauser1994fractalite}) to empirically conform to relationships of the form:
-
-\begin{equation}
-  \label{eq:radial-dimension}
-  A(r) \sim r^D
-\end{equation}
-
-where $A$ denotes the total area of the urban built-up extent that lays within a distance $r$ from the city center, and $D$ corresponds to the radial dimension, analogous to the fractal dimension of two-dimensional complex objects such as Sierpinski carpets.
-Although the measure might not be appropriate for urban agglomerations with multiple important centers, \cite{frankhauser1994fractalite} found extensive evidence that most contemporary cities could be approximated through (\ref{eq:radial-dimension}), with the value of $D$ consistently falling between 1.9 and 2.0.
-On the other hand, following initial observations by \cite{frankhauser1990aspects}, \cite{white1993cellular} suggested that the area-radius scaling could be better approximated throguh two values of $D$, a first steeper one for small values of $r$, reflecting an inner zone where urbanization was essentially complete, and a second lower slope for the outer zone that is still undergoing urbanization.
-
-\paragraph*{Size-frequency distribution of urban patches} \hspace{0cm} % force line break
-
-Contemporary urban agglomerations are configured by numerous patches of urban land use.
-If such configuration is fractal, there must be no characteristic patch size, and thus the relationship between the size of an urban patch and the number of patches of that size found in the agglomeration must follow a power-law scaling relationship of the form:
-
-\begin{equation}
-  \label{eq:size-frequency}
-  N(s) \sim s^{-\alpha}
-\end{equation}
-
-where $N(s)$ is the number of patches of size $s$, and the scaling exponent $\alpha$ is the patch size-frequency dimension \citep{white1993cellular}.
 
 
 \section*{Results}
 
-\subsection*{Time series of landscape metrics}
+\subsection*{Area-radius relationship}
 
-The computed time series of landscape metrics for the agglomerations of Bern, Lausanne and Zurich are displayed in \autoref{figures/metrics_time_series.pdf} (see also \nameref{code-metrics-time-series}).
-As suggested by previous research \citep{wu2002empirical, wu2004effects}, the chosen landscape metrics show predictable responses to changes to the map extent (see \nameref{code-sensitivity-extent}). Therefore, the reminder will only consider the values computed at the extent of the urban agglomeration.
-
-\begin{figure}[!ht]
-  \begin{adjustwidth}{0cm}{-.4\textwidth}
-    \centering  
-    \includegraphics[width=\linewidth]{figures/metrics_time_series.pdf}
-    \vspace{.5em}
-    \caption[Time series of landscape metrics]{\label{figures/metrics_time_series.pdf}Time series of landscape metrics. The eight metrics of the two upper rows are computed at the urban class level, that is, aggregating the values computed for each urban patch. The two metrics of the lower row are computed at the landscape level, that is, considering the patches of all the classes present within the landscape (urban and natural in this case)}
-  \end{adjustwidth}
-\end{figure}
-
-The proportion of landscape occupied by urban patches, represented by PLAND has increased monotonically for the three agglomerations. Bern and Lausanne show almost indistinguishable trends, starting from a 13$\%$ in the early 1980s and surpass the 16$\%$ in the last snapshot of 2013 and 2014 respectively. Zurich shows a parallel tendence with the percentage of urbanized land increasing from 22$\%$ in 1982 to a 27$\%$ in 2016.
-Similarly, MPS and LPI also show a monotonic increase, parallel among the three agglomerations, but again with higher values for Zurich.
-Such trends are overall characteristic of coalescence stages and the higher values observed in Zurich are consistent with its higher population density.
-
-On the other hand, PD reveals more complex and idiosyncratic trends, which suggest that new urban patches can basically emerge at any period.
-The Bern agglomeration shows the highest PD values, which is consistent with its MPS and LPI being the lowest among the three agglomerations and denotes a landscape configured by numerous small urban patches.
-Despite the irregularity of PD, ED shows more consistent tendencies of increase in Bern and Lausanne and decrease in Zurich. From the perspective of the diffusion and coalescence hypothesis, Bern and Lausanne are seemingly undergoing a diffusion stage, whereas the decrease of Zurich is more characteristic of coalescence.
-The flat evolution of ED during the first period in Zurich suggests a transition from diffusion to coalescence, which is also observed in Lausanne during the last period.
-This postulate is also supported by the trend of AWMFD, which in Zurich is almost identical to that of ED, and shows an unimodal pattern for Lausanne, also characteristic of a transition from diffusion to coalescence. The decline of the AWMFD observed during the last period in Bern also suggest that albeit tardier than its counterparts, Bern might also be undergoing a shift towards coalescence.
-The monotonic decrease of the LSI reveals that the landscape is becoming less edgy, which is also characteristic of coalescence.
-Similarly, ENN shows an overall monotonic decrease which suggests that distances between neighboring urban patches are decreasing.
-
-The two metrics that operate at the landscape level, CONTAG and SHDI show consistent monotonic trends which are almost identical for Bern and Lausanne.
-The decrease of CONTAG indicates that urban and natural patches are becoming increasingly disaggregated and interspersed, which is characteristic of diffusion and contrasts with the hallmarks of coalescence exhibited by most of the other metrics.
-On the other hand, the increase of SHDI denotes an increasing compositional diversity.
-The fact that the values of CONTAG and SHDI are respectively lower and higher in Zurich is mostly due to its higher proportion of urbanized landscape, which make the proportional abundance of urban and natural pixels more even than in Bern or Lausanne.
-Overall, given that only two classes (i.e., urban and natural) are considered within this study, CONTAG and SHDI are almost perfectly correlated with PLAND (see \nameref{code-metrics-time-series}), because the relative abundance of each class is the main determinant of the aggregation, interspersion and diversity of its patches \citep{mcgarigal2012fragstats}.
-
-
-\subsection*{Growth modes}
-
-The relative dominance of infilling, edge expansion and leapfrog development during the period of study is displayed in \autoref{figures/growth_modes.pdf}.
-As suggested by \cite{li2013quantifying}, all three urban growth modes act simultaneously.
-Edge-expansion is the most dominant growth mode and maintains its importance throughout all agglomerations and time periods, nevertheless, it tends to diminish over time. Such a decrease of edge-expansion is compensated by an increasing influence of infilling. Leapfrog is by far the least dominant growth mode, and its influence does not show any clear trend of increase or decrease.
-
-As with landscape metrics, Bern and Lausanne show similar characteristics, namely an unequivocal dominance of edge-expansion and a slight increase of the area-weighted influence of infilling.
-On the other hand, leapfrog has very little influence in the agglomeration of Zurich, while the prevalence of edge-expansion and infilling is equally significant, especially in the latter periods.
-Like the time series of landscape metrics suggest, the higher dominance of infilling observed in Zurich is characteristic of coalescence.
-Similarly, the increasing influence of infilling in Bern and especially in Lausanne are consistent with the transition from diffusion to coalescence that the concave trends of ED and AWMFD seemingly indicate.
-
-\begin{figure}[!ht]
-  \begin{adjustwidth}{0cm}{-.4\textwidth}
-    \centering  
-    \includegraphics[width=\linewidth]{figures/growth_modes.pdf}
-    \vspace{.5em}
-    \caption[Three growth modes]{\label{figures/growth_modes.pdf}Changes in the relative dominance of infilling, edge expansion and leapfrog over the three time periods of each urban agglomeration in terms of number of new urban patches (upper row) and their respective area (lower row).}
-  \end{adjustwidth}
-\end{figure}
-
-
-\subsection*{Fractal aspects of urban patterns}
-
-The area-radius scaling and the patch size-frequency distribution of the three urban agglomerations at each temporal snapshot are plotted in \autoref{figures/area_radius_scaling.pdf} and \autoref{figures/size_frequency_distribution.pdf} respectively.
+The area-radius relationship of the three urban agglomerations at each temporal snapshot is plotted in \autoref{figures/area_radius_scaling.pdf}.
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.4\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/area_radius_scaling.pdf}
     \vspace{.5em}
-    \caption[Area-radius scaling]{\label{figures/area_radius_scaling.pdf}Area-radius scaling of the three urban agglomerations at each temporal snapshot. The relationship has been estimated by computing the total area occupied by urban land uses laying within a series of radius values (noted by the cross-shaped markers) from 1000 to 20000m, successively increasing by a step of 1000m. The reference center point has been manually retrieved from the OpenStreetMap\footnotemark. See \nameref{code-area-radius-scaling}.} % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
+    \caption[Area-radius scaling]{\label{figures/area_radius_scaling.pdf}Area-radius relationship of the three urban agglomerations at each temporal snapshot. The plot is produced by computing the total area occupied by urban land uses laying within a series of radius values (noted by the dot-shaped markers) from 1000 to 20000m, successively increasing by a step of 500m. The reference center points correspond to the town hall location of each urban agglomeration, and have been manually retrieved from the OpenStreetMap\footnotemark. % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
+    The upper inset shows the evolution along the temporal snapshots of the breakpoint $r_b$ (in meters) for the two-segment regression that minimizes the sum of squared residuals, while the lower inset shows the evolution along the temporal snapshots of the coefficient of determination R$^2$ of the single-segment fit (blue) and of the two-segment piecewise fit (orange). See \nameref{code-area-radius-scaling}.}
   \end{adjustwidth}
 \end{figure}
 
 \footnotetext{\url{https://www.openstreetmap.org/}}
 
-In line with the observed landscape metrics and growth modes, the urban agglomerations of Bern and Lausanne show similar scaling behavior, with a kink (located around the 3000m radial distance) separating the steeper inner urbanized zone and the outer zone with more non-urban land.
-The area-radius scaling of Zurich is characterized by a steeper slope with practically no appreciable kink, which denotes higher proportion of urban land uses at greater radial distances from the city center.
-At the same time, the curves become steeper through time in all agglomerations, which reflects how they fill the available space as urbanization unfolds.
-Overall, the area-radius scaling curves of Bern and Lausanne are consistent with the bifractal radial city model \citep{white1993cellular,white2015modeling}.
-However, the temporal evolution of their scaling curves suggests that as they become more urbanized, the kink might attenuate, leading to the almost straight line observed in Zurich.
-Such an hypothesis seems further supported by the trends of the landscape metrics and growth modes reported above, which suggest that the kink in the area-radius scaling curve might be characteristic of agglomerations whose urban patches are still undergoing diffusion, whereas straight lines might correspond to more consolidated agglomerations whose urban pathces are coalescing.
+% As suggested by the R$^2$ of the simple linear regression and the two-segment piecewise regression respectively (both regressions in a log-log scale), the urban agglomerations of Bern and Lausanne show an area-radius scaling that is significantly better approximated by two line segments in a log-log scale hence consistent with the bi-fractal city model suggested by \cite{white1993cellular}.
+On the one hand, the urban agglomerations of Bern and Lausanne show an area-radius relationship that is significantly better approximated by two line segments in a log-log scale (as suggested by the R$^2$ values of the ordinary linear regression and the piecewise regression with two line segments respectively, see \nameref{code-area-radius-scaling}), hence consistent with the bifractal city model suggested by \cite{white1993cellular}.
+In the two urban agglomerations, the breakpoints that separate the inner and outer zones are located around a 3 km distance of the city center and remain very stable through time in the case of Bern, while a slight tendence to increase might be noted in Lausanne, from 2.7 km in 1980 to 3.3 km in 2014.
+% On the other hand, area-radius scaling of Zurich is significantly steeper than its counterparts and might be approximated by a single straight line in the log-log scale (see \nameref{code-area-radius-scaling}).
+On the other hand, area-radius relationship of Zurich is significantly steeper than its counterparts. Considering the R$^2$ of the simple and the piecewise regressions, such relationship might also be approximated by a single straight line in the log-log scale (see \nameref{code-area-radius-scaling}).
+Nonetheless, the two-segment fit for Zurich yields a breakpoint that is initially located at 5.2 km from the city center in 1982 and increases to 6.7 km in 2016.
+
+% Overall, the results suggests that Zurich fills a higher proportion of the available space, not only at small distances from the agglomeration center but also in suburban environments.
+Overall, the results suggests that Zurich fills a higher proportion of the available space, especially at large radial distances from the agglomeration center.
+% At the same time, the curves become steeper through time in all agglomerations, especially for large radial distances. As a result, the area-radius relationship in Bern and Lausanne is increasingly better approximated by a simple regression.
+At the same time, the area-radius relationship becomes steeper through time in the three urban agglomeration --- a trend that is more notable in the outer zones.
+This suggests that as the two agglomerations become more urbanized, their area-radius relationship could tend towards the almost straight line in the log-log scale observed in Zurich (see \nameref{code-area-radius-scaling}).  % , which would in turn challenge the validity of the bifractal model.
+
+
+
+\subsection*{Time series of landscape metrics}
+
+The computed time series of landscape metrics for Bern, Lausanne and Zurich at the extents of the whole agglomeration, the inner zone and outer zone are displayed in \autoref{figures/metrics_time_series.pdf} (see \nameref{code-metrics-time-series}).
+
+\begin{figure}[!ht]
+  \begin{adjustwidth}{0cm}{-.3\textwidth}
+    \centering
+    \includegraphics[width=1.3\textwidth]{figures/metrics_time_series.pdf}
+    
+    \caption[Time series of landscape metrics]{\label{figures/metrics_time_series.pdf}Time series of landscape metrics, computed at the urban class level.}
+  \end{adjustwidth}
+\end{figure}
+
+% The proportion of landscape occupied by urban patches, represented by PLAND has increased monotonically for the three agglomerations and at the three extents.
+The proportion of landscape occupied by urban patches has increased monotonically for the three agglomerations and at the three extents.
+At the agglomeration extent, Bern and Lausanne show almost indistinguishable trends, starting from a 13\% in the early 1980s and surpass the 16\% in the last snapshot of 2013 and 2014 respectively, while Zurich shows a parallel tendence with the percentage of urbanized land increasing from 22\% in 1982 to a 27\% in 2016.
+The inner zones of Bern and Lausanne are strongly urbanized, with the proportion of urbanized landscape showing a steady increase and surpassing the 70\% and 80\% respectively, whereas the inner zone of Zurich shows a smaller proportion of urbanized land, gradually increasing from a 54\% in 1982 to a 58\% in 2016.
+% The differences between Bern and Lausanne on the one hand and Zurich on the other
+In the outer zone, Bern and Lausanne show a limited degree of urbanization, increasing from an initial 11\% to 14\% and 16\% respectively, while in the outer zone of Zurich, the proportion of urbanized landscape is initially at almost 20\% and surpasses the 25\% in the last survey period.
+
+The number of urban patches per area unit, namely the patch density, shows the most irregular pattern. At the agglomeration extent and in the outer zone, none of the urban areas exhibit a discernable trend. % , which suggests that new urban patches emerge and existing patches coalescence.
+% In the inner zone, an overall decrease is observed in the three urban areas, suggesting that the number of patches is decreasing (e.g., coalescence). Nonetheless, such trend is only monotonic in Zurich.
+In the inner zone, an overall decrease is observed in the three urban areas, nonetheless, such a trend is only monotonic in Zurich. % Such overall decrease reflects that either existing urban patches have coalesced or either buildings or impervious surfaces have been replaced by natural land uses.
+On the other hand, the density of edges between urban and natural patches displays at the three extents similar trends for Bern and Lausanne, which differ significantly from those observed in Zurich. Bern and Lausanne show a monotonic increase at the agglomeration extent as well as in the outer zone, which contrasts with the monotonic decrease exhibited by Zurich. In contrast, the three urban agglomerations show a clear decrease in the inner zone, which is more notable in Lausanne. 
+
+Regarding the shape complexity of urban patches, represented by the area-weighted mean fractal dimension, the three urban agglomerations show distinctive patterns. In Bern, an overall increase might be noted at the agglomeration extent and in the outer zone, in both cases with a slight decline in the latter period which is reminiscent of an unimodal pattern. In Lausanne, a clearer unimodal pattern is observed also at the agglomeration and outer zone extents. At the inner zone, the three urban agglomerations display a monotonic decrease, which likewise for the edge density, is most pronounced in Lausanne.
+
+Finally, the distance between urban patches, reflected by the mean euclidean-nearest neighbor metric, shows an overall decrease at the agglomeration extent for Bern and Lausanne, while an unimodal pattern is observed in Zurich. The latter suggests that urban patches in the Zurich agglomeration became more distant between the first and second temporal snapshots and became more connected throughout the third and fourth temporal snapshots. In the inner zone, a monotonic decrease is observed in Lausanne whereas Bern and Zurich do not exhibit any discernable trend. In the outer zone, the three urban agglomerations show a monotonic decrease, suggesting that at that extent, urban patches are becoming more connected on average.
+
+% TODO: As suggested by previous research \citep{wu2002empirical, wu2004effects}, the chosen landscape metrics show predictable responses to changes to the map extent (see \nameref{code-sensitivity-extent}).
+% TODO: Other landscape metrics have been considered but are strongly correlated to PLAND (see \nameref{code-metrics-time-series}.
+
+% \begin{table}[!h]
+%   % \begin{adjustwidth}{-.15\textwidth}{0cm} % Comment out/remove adjustwidth environment if table fits in text column.
+%     \footnotesize % Font size can be changed to match table content. Recommend 10 pt.
+%     \renewcommand{\arraystretch}{1.5} % vertical spacing
+%     \centering
+%     \caption[Time series of landscape metrics]{Time series of landscape metrics}
+%     \begin{tabular}{p{.19\textwidth} p{.24\textwidth} p{.24\textwidth} p{.24\textwidth} p{.24\textwidth}} 
+%       \toprule
+%       & \textbf{PD} & \textbf{ED} & \textbf{AWMFD} & \textbf{ENN} \\
+%       \midrule
+%       Bern & irregular & increase (coalescence) & unimodal & decrease (coalescence) \\
+%       Lausanne & irregular & increase (coalescence) & unimodal & decrease (coalescence) \\
+%       Zurich & irregular & decrease (coalescence) & decrease (coalescence) & unimodal \\
+%       \midrule
+%       Bern (inner) & decrease (coalescence) & decrease (coalescence) & decrease (coalescence) & irregular \\
+%       Lausanne (inner) &  irregular & decrease (coalescence) & decrease (coalescence) & decrease (coalescence) \\
+%       Zurich (inner) & decrease (coalescence) & decrease (coalescence) & decrease (coalescence) & irregular \\
+%       \midrule
+%       Bern (outer) & irregular & increase (diffusion) & increase (diffusion) & decrease (coalescence) \\
+%       Lausanne (outer) & irregular & increase (diffusion) & unimodal & decrease (coalescence) \\
+%       Zurich (outer) & irregular & decrease (coalescence) & decrease (coalsecence) & decrease (coalescence) \\
+%       \bottomrule  
+%     \end{tabular}
+%   % \end{adjustwidth}
+% \end{table}
+
+  
+\subsection*{Growth modes}
+
+The changes in the relative dominance of the three growth modes, namely infilling, edge expansion and leapfrog, are displayed in \autoref{figures/growth_modes.pdf} (see \nameref{code-growth-modes}).
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.4\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/size_frequency_distribution.pdf}
-    \vspace{.5em}
-    \caption[Size-frequency distribution of urban patches]{\label{figures/size_frequency_distribution.pdf}Size-frequency distribution of urban patches for the three urban agglomerations at each temporal snapshot. Each dot represents an observed patch, with the color code denoting the temporal snapshot to which the patch corresponds. The colored dashed lines represent the best maximum likelihood fit to a power-law distribution for all the patch sizes observed at their corresponding temporal snapshot. The insets display an histogram with logarithmic bins of the urban patch size distribution. The plots have been produced with the Python package powerlaw \citep{alstott2014powerlaw}. See \nameref{code-size-frequency-distribution}.}
+
+    \includegraphics[width=1.3\textwidth]{figures/growth_modes.pdf}
+    
+    \caption[Three growth modes]{\label{figures/growth_modes.pdf}Changes in the relative dominance of infilling, edge expansion and leapfrog over the three time periods in terms of the area of the new urban patches, for the urban agglomerations of Bern (upper row), Lausanne (middle row) and Zurich (bottom row) and at the extents of the whole agglomeration (left), inner zone (center) and outer zone (right). See \nameref{code-growth-modes}.}
   \end{adjustwidth}
 \end{figure}
 
-On the other hand, the size frequency distribution of urban patches can be approximated by a power-law (see \nameref{code-size-frequency-distribution}), i.e., a straight line in the log-log scale, with its slope reflecting the scaling exponent $\alpha$ of (\ref{eq:size-frequency}). The slopes of the fitted curves are very stable through time for the three urban agglomerations, although they display a slight tendence to decrease over time (note the smaller slope of the fit curves of latter years in \autoref{figures/size_frequency_distribution.pdf} and \nameref{code-size-frequency-distribution}).
-Such a trend reflects how urban patches are becoming larger, which is in consonance with the increase of MPS observed for all the urban agglomerations.
-Nonetheless, the overall increase of MPS is counterbalanced by the emergence of new urban patches of smaller size, which seemingly contribute not only to keeping the size-frequency distribution of urban patches as a power-law, but also to scaling exponents that remain very stable through time. This is relatively surprising, especially considering that PD --- the metric that reflects the number of urban patches --- and the dominance of leapfrog growth show the most irregular trends.
+% As with the time series of landscape metrics, the relative dominance of the three growth modes shows similar patterns in Bern and Lausanne, namely an unequivocal dominance of edge-expansion and a slight increase of the area-weighted influence of infilling.
+The relative dominance of the three growth modes shows almost indistinguishable trends at the agglomeration extent and in the outer zone, while a completely different pattern is observed in the inner zone.
+As with the time series of several landscape metrics, similar patterns might be noted in Bern and Lausanne. At the agglomeration extent and in the outer zone, edge-expansion is the most dominant mode of growth in the two urban areas, although its influence decreases throughout the period of study from a 62\% to a 53\% in Bern and from a 58\% to a 55\% in Lausanne (at the agglomeration extent). Such decrease is mostly at the expense of an increase on the relative dominance of infilling, which grows from 26\% to 32\% in Bern and from 30\% to 35\% (at the agglomeration extent).
+% A similar trend is observed at the agglomeration extent and outer zone of Zurich, yet in this case the dominance of infilling rises from 39\% to 47\% while the edge expansion decreases from 51\% to 44\%, thus infilling becomes the most dominant growth mode in the last period.
+A similar trend is observed at the agglomeration extent and outer zone of Zurich, yet in this case the dominance of infilling surpasses that of edge expansion in the last period (47\% of infilling versus a 44\% of edge expansion at the agglomeration extent).
+Lastly, at the agglomeration extent and in the outer zone, leapfrog is by far the least dominant growth mode albeit there is no observable diminishment of its influence.
+
+% The inner zones of Bern and Lausanne are clearly dominated by infilling, with the evolution of its influence throughout the period of study exhibiting a slight decline in Bern from 81\% to 77\% that contrasts with the noticeable increment from 61\% to 90\% observed in Lausanne.
+The inner zones of Bern and Lausanne are clearly dominated by infilling, with the evolution of its influence exhibiting a slight decline in Bern from 81\% to 77\% that contrasts with the noticeable increment from 61\% to 90\% observed in Lausanne.
+In the inner zone of Zurich, infilling is also the most dominant growth mode with a dominance that remains between 60\% and 70\% without a discernable trend. Additionally, the influence of edge expansion in the inner zone of Zurich, i.e., 35\% in the last period, is significantly above its counterparts in Bern and Lausanne, i.e., 23\% and 10\% respectively in the last period. % most likely because of its larger breakpoint radial distance
+Lastly, in the three urban agglomerations, the influence leapfrog is practically irrelevant in the inner zone.
 
 
 \section*{Discussion}
 
 \subsection*{Testing hypothesis of urbanization patterns}
 
-The examination of the spatiotemporal patterns of land use change of the three Swiss urban agglomerations by means of landscape metrics, growth modes and fractal scaling reveal novel connections between the frameworks, which offer complementary perspectives.
-Firstly, the time series of landscape metrics generally support the diffusion and coalescence hypothesis, with Zurich, the largest Swiss urban agglomeration, exhibiting most characteristics of coalescence, whereas Bern and Lausanne are seemingly undergoing a transition between diffusion and coalescence. Additionally, the trend of SHDI, which is not explicitly considered in the diffusion and coalescence formulation of \cite{dietzel2005spatio}, suggests that the landscape is becoming increasingly diverse in land use.
-However, it must be noted that SHDI is not very informative when considering only urban and natural classes, since it will be strongly correlated with the proportion of landscape occupied by urban patches (PLAND).
+The results of this study can be used to explore whether there exist generalities and regularities in the spatiotemporal patterns of urbanization.
+% In this respect, a central question is whether the observed tranformation of the landscapes follow the prominent model of urban growth as a two-phase alternating process of diffusion and coalescence.
+In this respect, a central question is to what extent the observed tranformation of the landscapes conform to the prominent models of urbanization defined by the diffusion and coalescence hypothesis and the three growth mode hypothesis.
 
-Secondly, the temporal changes in the relative dominance of infilling, edge-expansion and leapfrog are overall consistent with the characterization of urbanization as a ``spiraling process that involves three growth modes of leapfrogging, edge-expanding and infilling [where] leapfrog and infilling tend to alternate in their relative dominance while edge-expansion is likely to remain its importance throughout much of the urbanization process'' \citep{li2013quantifying}. % [pages 1885-1886]
-Such formulation does not necessarily contradict the diffusion and coalescence model of urban land use change.
-Instead, the diffusion and coalescence dichotomy might be viewed as a particular case where the way in which leapfrog and infilling alternate their dominance is not aleatory but rather characterized by a progressive decrease of the former and an increase of the latter.
-In any case, the importance of leapfrog growth in the present study does not necessarily decrease over time, instead it seems that infilling is becoming increasingly influent at the expense of edge-expansion.
-Lastly, the three urban agglomerations clearly conform to the reviewed fractal morphological hallmarks, namely the bifractal area-radius scaling and the power-law size-frequency distribution of urban patches.
-In coherence with the landscape metrics and growth modes, Bern and Lausanne show very similar traits. On the one hand, both urban agglomerations display a clear kink in the area-radius scaling, while the area-radius scaling in Zurich practically delineates a steeper straight line, suggesting that urbanization in Zurich fills the available space more intensely even at higher distances to the main center. On the other hand, the power-law decay as patch sizes increase is faster for Bern and Lausanne than for Zurich, which denotes that the latter urban agglomeration is dominated by larger urban patches.
+The idea of urban growth as a two-phase alternating process of diffusion and coalescence was formulated by \cite{dietzel2005spatio} as a testable temporal pattern of landscape metrics: during the diffusion stage, the patch density, edge density, area-weighted mean fractal dimension and mean euclidean nearest-neighbor distance of urban patches should increase at first, reach an apex at different times and then decrease as patches start to coalesce, showing an overall unimodal pattern.
+% The time series of landscape metrics of this study show mixed support for the diffusion and coalescence hypothesis. At the agglomeration extent, the trends of the edge density and the area-weighted mean fractal dimension, which reflect the structural complexity of the landscape, suggest that Zurich is starting the coalescence stage, whereas Bern and Lausanne are seemingly undergoing a transition between diffusion and coalescence. The two metrics show almost identical wave-like decreases in Zurich, suggesting that the agglomeration was first at the transition between diffusion and coalescence, where the structural complexity of the landscape reached its apex, and then delved into the coalescence stage after the second period at 1994. At the same time, the edge density seems to have reached the apex in Lausanne, which together with the unimodal trend of the area-weighted mean fractal dimension, suggests that Lausanne is undergoing a transition between diffusion and coalescence. Lastly, Bern shows a monotonic increase in the edge density, which is characteristic of diffusion, nevertheless the decrease of area-weighted mean fractal dimension observed during the last period might suggest that albeit tardier than Lausanne, Bern is also undergoing a transition between diffusion and coalescence.
+The time series of landscape metrics of this study show mixed support for the diffusion and coalescence hypothesis.
+At the agglomeration extent, the trends of the edge density and the area-weighted mean fractal dimension, which reflect the structural complexity of the landscape, suggest that Zurich is already at the coalescence stage, whereas Bern and Lausanne are seemingly undergoing a transition between diffusion and coalescence.
+Nevertheless, the irregular pattern exhibited by the density of urban patches is in strong dissonance with the unimodal pattern supposed by the diffusion and coalescence model.
+% Bern: coalescence at the inner extent but diffusion at the outer extent
+% Zurich: coalescence, but, WTF with PD? We see that PD decreases at the inner extent, and that the latter increase occurs in the outer zone. This is consistent with the leapfrog.
+% Zurich fills a higher proportion of urbanized land by means of a more complex landscape structure, with less significant differences between the inner and outer extents. More suburbanization?
+Examining the time series of landscape metrics in the inner and outer zones provides additional insights that enlighten the peculiarities of the undergoing urbanization patterns.
+In Bern, the decreases of the patch density, edge density and area-weighted mean fractal dimension in the inner zone suggest that such extent is undergoing a coalescence process which contrasts with the pattern observed in the outer zone, where the increases of the edge density and area-weighted mean fractal dimension are characteristic of the diffusion stage.
+A similar pattern might be noted in Lausanne, however, the area-weighted mean fractal dimension at the outer extent does not show an increase but rather an unimodal pattern, which reflects that the shape complexity of urban patches in the outer zone has reached an apex after the first period and then progressively started to decline. This suggests that the inner zone of Lausanne is undergoing a coalescence process while the outer zone is seemingly at the transition between diffusion and coalescence.
+Finally, with the modest exception of the increase in the last period of the patch density in the agglomeration and outer extents of Zurich, the three metrics show monotonic decreases at the three considered extents, which indicates that both the inner and outer zone of Zurich show the characteristics of the coalescence stages.
 
-Altogether, the only metric that does not conform to the diffusion and coalescence dichotomy is CONTAG, which should increase as patches coalesce, yet monotonic decreases are observed for the three urban agglomerations. Such behavior suggests that urban and natural patches are becoming increasingly disaggregated and interspersed, which might result from a combination of three factors.
-The first, which has already been noted above, is that the value of CONTAG strongly depends on the proportion of landscape occupied by each land use, especially when comprising only two classes like in the present study.
-Secondly, increases in MPS are proportionally less important than its corresponding decreases in ED and AWMFD, which is consistent with a central property of fractal objects, namely that their border is over-proportionally lengthened with respect to their area.
-Finally, the small yet persistent action of leapfrog growth and the irregular trend of PD are evidence that new urban patches do emerge at all periods.
-This suggests that fragmentation of natural patches occurs despite the apparent trend of coalescence exhibited by the other metrics.
-Furthermore, the continuous fragmentation of natural patches not only contributes to the decrease of CONTAG, but is also key to keeping the size-frequency relation of urban patches as a power-law with very stable scaling exponents.
-Given that many related studies report continuous fragmentation of natural land at the urban fringe, it is likely the size-frequency distribution of urban patches in their regions of study shows similar power-law scaling behaviors.
+% The overall decrease of the distance between urban patches, reflected by the trend of the mean euclidean nearest-neighbor distance metric, suggests that 
+% On the other hand, the unimodal pattern displayed by the ENN
 
+% Diffusion and coalescence act simoultaneously, but differently depending on the considered extent
 
-\subsection*{Examining the persistence of fragmentation}
-
-As urbanization unfolds, urban patches are expected to grow, which suggests that eventually urban patches coalesce and thus the small ones disappear. Yet this contrasts with the continuous fragmentation of natural patches and the persistence of the power-law scaling of the urban patches observed in the present study.
-As a matter of fact, the complexity sciences offer a number of high-level models that intend to explain the emergence and persistence of fractal structures and power-law distributions, such as Zipf's principle of minimal effort \citep{zipf1949human}, or the concept of self-organized criticality \citep{bak1988self}.
-Nevertheless, convincingly linking the observed urban patterns to models that account for socioeconomic, cultural and political drivers of urbanization remains a challenge \citep{batty2001modelling, manson2006complexity, bosch2019addressing}. 
-
-The continuous fragmentation and persistence of the power-law scaling reported above might result from multiple factors.
-On the one hand, several key topological properties of urban street networks, such as the number of intersections per street or street length, also exhibit power law distributions \citep{jiang2007topological}, reflecting a scale-free hierarchical organization with a few major arterial roads and a large number of small streets.
-Since the organization of these networks exerts a central influence in the flows of people, goods and information that underpin the spatial development of cities and regions \citep{bettencourt2007growth, batty2008size}, the fact that the size of urban patches also follows a power law certainly appears as more than a mere coincidence. % cannot be taken for granted.
-Furthermore, the spatial evolution of urban street networks have also been characterized by two elementary processes, namely exploration, which expands the network towards previously non-urbanized areas, and densification, where new segments bridge gaps between existing streets \citep{strano2012elementary}.
-The way in which exploration is observed to be more active in earlier stages and is followed by a phase of densification is seemingly analogous to the diffusion and coalescence hypothesis as well as to the increasing dominance of infilling.
-Overall, the foregoing findings urge deeper exploration of the connection between the evolution of transportation networks and land use patterns.
-
-Another factor that calls for consideration is the decentralized organization of the Swiss spatial planning system.
-The urban agglomerations examined in this study are configured by multiple municipalities which might adopt distinct approaches to spatial planning.
-During the last decades, most of the large Swiss municipalities have adopted land management measures that incentivize the densification \citep{rudolf2018planning}, yet the above evidence shows that the majority of population growth and land conversion has occured in small and mid-sized municipalities that are located further away from the agglomeration core.
-It is therefore very likely that such municipalities have designated new building zones, especially for residential purposes, which contribute to the leapfrogging of urban patches surrounded by natural land, and ensure a continuous feed of small urban patches that keep their size-frequency distribution stable.
-The lack of coordination between of planning authorities is widely regarded as one of the main causes of urban sprawl \citep{carruthers2002fragmentation, mann2009institutional}, and the revision of the Swiss Federal Act on regional planning of 2013 intends to overcome such shortcoming and define a national growth management strategy based on infill redevelopment and densification.
+% A complimentary perspective: growth modes
+% The three growth modes model of \cite{li2013quantifying} depicts urbanization as a ``spiraling process that involves three growth modes of leapfrogging, edge-expanding and infilling [where] leapfrog and infilling tend to alternate in their relative dominance while edge-expansion is likely to remain its importance throughout much of the urbanization process'' (pages 1885-1886).
+% The results of this study are consistent with the characterization of urbanization as a ``spiraling process that involves three growth modes of leapfrogging, edge-expanding and infilling [where] leapfrog and infilling tend to alternate in their relative dominance while edge-expansion is likely to remain its importance throughout much of the urbanization process'' \citep{li2013quantifying}.
+The irregular trend of the patch density observed in the three urban agglomerations is evidence that new urban patches might emerge at any period.
+Such a remark is reminiscent of the critique to the diffusion and coalescence model by \cite{li2013quantifying}, who suggested that such dichotomy can be misleadingly over-simplistic because, in reality, the three growth modes of infilling, edge-expansion and leapfrog operate simultaneously, and thus ``it is more plausible to view urbanization as a spiraling process that involves three growth modes of leapfrogging, edge-expanding and infilling [where] leapfrog and infilling tend to alternate in their relative dominance while edge-expansion is likely to remain its importance throughout much of the urbanization process'' (pages 1885-1886).
+% Nevertheless, the evaluation of the evolution of the relative dominance of the three growth modes at the inner and outer zones allows for further clarifications.
+The results of this study are primarily consistent with such model, nevertheless, a thorough examination allows for further clarifications.
+On the one hand, at the agglomeration extent, the importance of leapfrog growth does not necessarily decrease over time, instead it seems that infilling is becoming increasingly influent at the expense of edge-expansion.
+% On the other hand, the influence of the three growth modes changes dramatically when inspecting the results in the inner and outer zones. While the results at the latter extent are mostly consistent with the three growth modes hypothesis, the former extent is mostly dominated by infilling, and the presence of leapfrog growth is either completely inexistent or practically insignificant.
+On the other hand, the influence of the three growth modes changes dramatically when inspecting the results in the inner zone, which is mostly dominated by infilling, and the presence of leapfrog growth is either completely inexistent or practically insignificant.
+% Therefore the simultaneous action of the three growth modes alleged by \cite{li2013quantifying} strongly depends on the considered extent.
+This challenges the overall validity of the three growth modes hypothesis, especially since the alleged simultaneous action of the three growth modes does not hold for the inner zone extent.
+Overall, the results of this study suggest that both the diffusion and coalescence as well as the three growth modes models of urbanization should be extended by clarifying the patterns that are to be expected at each extent --- and that such extent should be systematically defined according to quantitative criteria, as for example, the breakpoint location in the area-radius relationship.
 
 
-\subsection*{Planning implications}
+\subsection*{Identifying characteristic extents in urban agglomerations}  % and boundaries 
 
-The fragmentation of natural habitats, as observed in the three Swiss urban agglomerations of this study, has been extensively linked to negative impacts on biodiversity and key ecosystem functions \citep{haddad2015habitat}.
-Nevertheless, growth management policies that misappreciate the residential preferences for low-density environments might inadvertently encourage households to relocate further away from the agglomeration centers, resulting in longer commute times and an overall increase of sprawl at the regional scale \citep{schwanen2004policies, robinson2005twenty}.
-On the other hand, the interspersion of patches of natural land within urban agglomerations provide valuable ecosystem services to its residents, such as the reduction of air pollution, alleviation of maximum temperatures, absorption of storm water, noise reduction, carbon sequestration, improvement of aesthetic and cultural values as well as the preservation of ecological habitats and biodiversity \citep{bolund1999ecosystem, gomez2013classifying}.
-In Switzerland, the lowest supply of such ecosystem services is found in the cantons with highest population density, hence policies encouraging densification should consider the role of natural patches to ensure a sustainable supply of ecosystem services \citep{jaligot2019historical}.
-To that end, recent planning approaches based on fractal geometry \citep{yamu2015spatial} might be exploited in order to satisfy the residential demand for green environments while explicitly considering planning objectives such as protecting natural habitats and improving accessibility to urban and natural amenities \citep{bosch2019addressing}.
+% 1. Need for better methods to delinate urban boundaries and zones
+In the present study, a fractal analysis of the area-radius relationship has been exploited to define the extents at which the landscape metrics and growth modes have been computed.
+More precisely, the employed approach is based on the bifractal city model suggested by \cite{white1993cellular}, which is characterized by the existence of a kink in the area-radius relationship that separates an urban agglomeration into a inner zone where urbanization is essentially complete, and an outer zone that is still undergoing active development of natural land into urban uses.
+Although the existence of such a kink is also noted in the extensive fractal analysis of a number of cities around the world by \cite{frankhauser1994fractalite}, the bifractal city model lacks an established method to validate it quantitatively.
+In consonance with the area-radius plots, comparing the coefficients of adjustments of the simple and piecewise regressions suggests that Bern and Lausanne can be significantly better approximated by two curves.
+However, it is trivial to show that increasing the number of segments in such a piecewise regression will always lead to a greater or equal coefficient of adjustment.
+% While, there exist several quantitative methods to determine the appropriate number of segments that based on the compromise between model error and model complexity, 
+In this study, the bifractal model has been assumed by exogenously fixing the number of segments to two before the piecewise regression, yet further deliberation is required in order to develop methods to properly identify distinct scaling regimes in urban area-radius curves.
+% Despite relevant advances \cite{thomas2010clustering}, 
+% For instance, in a following examination of their model, \cite{white2015modeling} suggest that a third zone in the area-radius relationship might be noted in Dublin.
 
+% 2. Polycentric, multi-functional agglomerations
+% Another issue of concern is the assumption of a monocentric organization that underlies the bifractal city model.
+% The results of the piecewise regression depend on the choice of the origin point, which in this study, has been set to the town hall of each city.
+% % While there exist other measures from fractal geometry that can be applied to evaluate the space-filling characteristics of urban areas that do not require the use of a reference point, such as the correlation dimension \citep{frankhauser1994fractalite}, the contextual nature of the radial dimensoin provides additional information on the internal structure of the urban area and helps human interpretation of the results \citep{white1993cellular}.
+% While the fact that the slope of the area-radius relationship decreases with increasing radius is evidence that the three urban agglomerations statistically have a main center,
+% Another issue of concern arises from the definition of urban agglomerations adopted in this study, which are built based on functional criteria such as employment and commuting behavior \citep{sfso2014espace}.
+Another issue of concern arises from the assumption of a monocentric organization that underlies the bifractal city model.
+While such assumption is statistically confirmed in the three urban agglomerations by the way in which the slope of the area-radius relationship decreases with increasing radius, this might be largely attributable to how the extents of the urban agglomerations adopted in this study have been constructed, i.e., based on functional criteria such as employment and commuting behavior \mycitep{sfso2014espace}.
+% In highly populated yet decentralized regions such as the Swiss Plateau, which is additionally characterized by a dense network of roads and railways
+Furthermore, the boundaries between neighboring urban agglomerations in the Swiss Plateau are starting to permeate --- for instance, the urban agglomerations of Lausanne and its neighboring Vevey-Montreux practically configure an urban continuum, and the same might be noted for the urban agglomerations of Zurich and Baden-Brugg. Therefore, it might be appropriate to employ other quantitative approaches to detect urban agglomeration boundaries based on land use/land cover characteristics, such as those based on percolation theory \citep{rozenfeld2008laws} or fractal analysis \citep{tannier2013defining}, which would likely yield more polycentric patterns.
+
+% By using other quantitative approaches to delineate urban agglomerations in highly populated yet decentralized regions such as the Swiss Plateau, conflation between Bern and Thun, Lausanne and Vevey-Montreux, Zurich and Wintherthur and Baden-Brugg and Zug \cite{sfso2014espace}. 
+
+% 3. Size is the main predictor
+
+% The combination of fractal analysis of the area-radius relationship with the time series of landscape metrics and the evolution of the relative dominance of the three growth modes also highlight an additional observation: Zurich vs Bern and Lausanne
+
+% Also: fractal geometry can be exploited in planning to enhance the interface between natural and urban land uses in order to optimize the provision of ecosystem services \cite{bosch2019addressing}
 
 \section*{Conclusion}
 
-The present study combines three different approaches to study the spatiotemporal patterns of land use change associated to urbanization of three of the main Swiss urban agglomerations over four periods of study from 1980 to 2016.
-The results are quite consistent with the diffusion and coalescence model of urbanization, and suggest that Zurich is already immersed in the coalescence phase, whereas Bern and Lausanne seem to be at the transition between diffusion and coalescence.
-However, despite the characteristics of coalescence exhibited by most metrics, continuous leapfrogging of urban patches occurs in the three agglomerations, which fragments natural land and maintains the structural complexity of the landscapes over the four periods of study.
-Overall, the analysis of this paper shows how landscape metrics, urban growth modes and fractal scaling can be combined to obtain insights into the spatiotemporal patterns of urbanization that would be hard to obtain with any of the approaches individually. 
-The way in which complex fractal structures are sustained despite important changes in the landscape is reminiscent of the dynamic behaviors encountered in a wide range of complex self-organizing systems, and in the context of this study, is probably related to the distinct planning policies adopted by the various municipalities that configure each urban agglomeration, as well as to residential preferences for low density environments.
-With the current Federal planning precepts aiming at the concentration growth within the existing urban agglomerations, local planning authorities should devote special attention to the valuable ecosystem services that the persisting patches of natural land can provide to urban dwellers.
-
+The present study combines three different approaches to study the spatiotemporal patterns of land use change associated to urbanization in three of the main Swiss urban agglomerations over four surveys in the period from 1980 to 2016.
+Fractal analysis of the area-radius relationship of urban land is employed to separate the urban agglomeration into two characteristic extents, the inner and outer zones, in which the landscape metrics and the growth modes are computed.
+The results show that the three urban agglomerations can show very distinct spatiotemporal patterns in the inner and outer zones. On the one hand, Bern and Lausanne present most characteristics of the coalescence stage in the inner zone, whereas the outer zone displays many traits of the diffusion stage. On the other hand, leapfrog growth is practically nonexistent in the inner zone, which is mainly dominated by infilling.
+Therefore, spatiotemporal hypotheses of urban land use change should be revised to consider the way in which contemporary cities are configured by a different characteristic extents where urbanization exhibits distinct spatial signatures.
 
 
 \section*{Supplementary Material}
@@ -443,24 +581,24 @@ With the current Federal planning precepts aiming at the concentration growth wi
 \renewcommand{\thefigure}{S\arabic{figure}}
 
 \subsection*{Code S1}
-\label{code-metrics-time-series}
-Computation of the time series of landscape metrics and exploration of their correlations over all the urban agglomerations and the whole period of study, as Jupyter Notebook (IPYNB).
-\url{https://github.com/martibosch/swiss-urbanization/tree/biorxiv/notebooks/metrics_time_series.ipynb}
-
-\subsection*{Code S2}
-\label{code-sensitivity-extent}
-Exploration of the sensitivity of the time series of landscape metrics to the spatial extent of the urban agglomerations, as Jupyter Notebook (IPYNB).
-\url{https://github.com/martibosch/swiss-urbanization/tree/biorxiv/notebooks/sensitivity_extent.ipynb}
-
-\subsection*{Code S3}
 \label{code-area-radius-scaling}
 Exploration of the area-radius scaling of each urban agglomerations over the whole period of study, as Jupyter Notebook (IPYNB).
-\url{https://github.com/martibosch/swiss-urbanization/tree/biorxiv/notebooks/area_radius_scaling.ipynb}
+\url{https://github.com/martibosch/swiss-urbanization/blob/revisions/notebooks/area_radius_scaling.ipynb}
 
-\subsection*{Code S4}
-\label{code-size-frequency-distribution}
-Exploration of the size-frequency distribution of urban patches of each urban agglomeration over the whole period of study, as Jupyter Notebook (IPYNB).
-\url{https://github.com/martibosch/swiss-urbanization/tree/biorxiv/notebooks/size_frequency_distribution.ipynb}
+\subsection*{Code S2}
+\label{code-metrics-time-series}
+Computation of the time series of landscape metrics and exploration of their correlations over all the urban agglomerations and the whole period of study, as Jupyter Notebook (IPYNB).
+\url{https://github.com/martibosch/swiss-urbanization/blob/revisions/notebooks/metrics_time_series.ipynb}
+
+\subsection*{Code S3}
+\label{code-growth-modes}
+Computation of the relative dominance of the three growth modes over all the urban agglomerations and the whole period of study, as Jupyter Notebook (IPYNB).
+\url{https://github.com/martibosch/swiss-urbanization/blob/revisions/notebooks/growth_modes.ipynb}
+
+% \subsection*{Code S4}
+% \label{code-size-frequency-distribution}
+% Exploration of the size-frequency distribution of urban patches of each urban agglomeration over the whole period of study, as Jupyter Notebook (IPYNB).
+% \url{https://github.com/martibosch/swiss-urbanization/tree/biorxiv/notebooks/size_frequency_distribution.ipynb}
 
 %\clearpage
 
@@ -501,7 +639,6 @@ Exploration of the size-frequency distribution of urban patches of each urban ag
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
   This research has been supported by the \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL).
-  The authors gratefully acknowledge R\'emi Jaligot for his valuable feedback.
 \end{acknowledgements}
 
 

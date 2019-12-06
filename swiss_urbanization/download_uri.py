@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from urllib import request
 
@@ -7,14 +6,15 @@ import click
 
 @click.command()
 @click.argument('uri')
-@click.argument('output_filepath', type=click.Path())
-def main(uri, output_filepath):
+@click.argument('dst_filepath', type=click.Path())
+def main(uri, dst_filepath):
     logger = logging.getLogger(__name__)
 
     # download zip
-    logger.info(f'downloading {uri} to {output_filepath}')
+    logger.info("downloading %s to %s", uri, dst_filepath)
     # TODO: with tqdm(total=filesize, unit='B', unit_scale=True, desc=key) as t
-    request.urlretrieve(uri, output_filepath)
+    request.urlretrieve(uri, dst_filepath)
+    logger.info("done")
 
 
 if __name__ == '__main__':

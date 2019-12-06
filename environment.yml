@@ -1,21 +1,20 @@
 name: swiss-urbanization
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python=3.7
-  - basemap=1.2.1
-  - basemap-data-hires=1.2.1
-  - ipykernel=5.1.3
-  - nbconvert=5.6.1  
-  - osmnx=0.11
-  - owslib=0.19.0  
-  - pylandstats=2.0.0b1
-  - python-dotenv=0.10.3
-  - python-slugify=4.0.0  
-  - seaborn=0.9.0
+  - ipykernel
+  - basemap
+  - basemap-data-hires
+  - osmnx=0.11.0
+  - owslib
+  - pip
+  - pylandstats>=2.0.0
+  - pyproj>=2.0.0
+  - python-dotenv
+  - python-slugify
+  - seaborn
   - pip:
-    - powerlaw==1.4.6
-    - pwlf==1.1.5
-    - swisslandstats-geopy==0.7.2
     - -e .
+    - pwlf
+    - swisslandstats-geopy>=0.7.3

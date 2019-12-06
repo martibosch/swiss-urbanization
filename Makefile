@@ -1,100 +1,118 @@
 .PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
-download_data agglomeration_extracts figures lint requirements sync_data_to_s3 \
-sync_data_from_s3
-
-#################################################################################
-# GLOBALS                                                                       #
-#################################################################################
-
-PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = ceat-swiss-urbanization
-PROFILE = ceat
-PROJECT_NAME = swiss-urbanization
-PYTHON_INTERPRETER = python3
-VIRTUALENV = conda
+	agglomeration_extracts breakpoints figures lint
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
-## Install Python Dependencies
-requirements: test_environment
-ifeq (conda, $(VIRTUALENV))
-	conda env update --name $(PROJECT_NAME) -f environment.yml
-else
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-endif
+## GLOBALS
+### variables
+CODE_DIR = swiss_urbanization
+DATA_DIR = data
+DATA_RAW_DIR := $(DATA_DIR)/raw
+DATA_PROCESSED_DIR := $(DATA_DIR)/processed
 
-## Download data
-# variables
-# https://www.bfs.admin.ch/bfs/fr/home/services/geostat/geodonnees-statistique-federale/limites-administratives/limites-communales-generalisees.assetdetail.5247306.html
-# https://www.bfs.admin.ch/bfs/fr/home/services/geostat/geodonnees-statistique-federale/sol-utilisation-couverture/statistique-suisse-superficie/nomenclature-standard.assetdetail.6646411.html
+### rules
+$(DATA_RAW_DIR): | $(DATA_DIR)
+	mkdir $@
+$(DATA_PROCESSED_DIR): | $(DATA_DIR)
+	mkdir $@
+
+
+## DOWNLOAD DATA
+### variables
+#### https://bit.ly/2thrc5V
 GMB_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/5247306/master
+#### https://bit.ly/2Nr5pQd
 SLS_URI = https://www.bfs.admin.ch/bfsstatic/dam/assets/6646411/master
-DOWNLOAD_FSO_PY = swiss_urbanization/data/download_fso.py
+DOWNLOAD_URI_PY := $(CODE_DIR)/download_uri.py
 
-GMB_DIR = data/raw/gmb
+GMB_DIR := $(DATA_RAW_DIR)/gmb
 GMB_SHP_BASENAME = g1a18
 GMB_SHP_FILEPATH := $(GMB_DIR)/$(GMB_SHP_BASENAME).shp
 
-SLS_DIR = data/raw/sls
+SLS_DIR := $(DATA_RAW_DIR)/sls
 SLS_CSV_FILEPATH := $(SLS_DIR)/AREA_NOAS04_17_181029.csv
 
-# rules
-$(GMB_DIR):
-	mkdir $(GMB_DIR)
-$(GMB_DIR)/%.zip: $(DOWNLOAD_FSO_PY) | $(GMB_DIR)
-	$(PYTHON_INTERPRETER) $(DOWNLOAD_FSO_PY) $(GMB_URI) $@
+### rules
+$(GMB_DIR): | $(DATA_RAW_DIR)
+	mkdir $@
+$(GMB_DIR)/%.zip: $(DOWNLOAD_URI_PY) | $(GMB_DIR)
+	python $(DOWNLOAD_URI_PY) $(GMB_URI) $@
 $(GMB_DIR)/%.shp: $(GMB_DIR)/%.zip
 	unzip -j $< 'ggg_2018-LV95/shp/$(GMB_SHP_BASENAME)*' -d $(GMB_DIR)
-	touch $(GMB_SHP_FILEPATH)
+	touch $@
 
-$(SLS_DIR):
+$(SLS_DIR): | $(DATA_RAW_DIR)
 	mkdir $(SLS_DIR)
-$(SLS_DIR)/%.zip: $(DOWNLOAD_FSO_PY) | $(SLS_DIR)
-	$(PYTHON_INTERPRETER) $(DOWNLOAD_FSO_PY) $(SLS_URI) $@
+$(SLS_DIR)/%.zip: $(DOWNLOAD_URI_PY) | $(SLS_DIR)
+	python $(DOWNLOAD_URI_PY) $(SLS_URI) $@
 $(SLS_DIR)/%.csv: $(SLS_DIR)/%.zip
 	unzip -j $< '*.csv' -d $(SLS_DIR)
-	touch $(SLS_CSV_FILEPATH)
+	touch $@
 
 download_gmb: $(GMB_SHP_FILEPATH)
 download_sls: $(SLS_CSV_FILEPATH)
 
 
 ## AGGLOMERATION EXTRACTS
-# variables
-SETTINGS_PY = swiss_urbanization/data/settings.py
+### variables
+SETTINGS_PY := $(CODE_DIR)/settings.py
 
-AGGLOMERATION_SLUGS = bern lausanne zurich
-AGGLOMERATION_EXTRACTS_DIR = data/processed/agglomeration_extracts
-MAKE_AGGLOMERATION_EXTRACT_PY = swiss_urbanization/data/make_agglomeration_extract.py
+AGGLOM_SLUGS = bern lausanne zurich
+AGGLOM_EXTRACTS_DIR := $(DATA_PROCESSED_DIR)/agglom_extracts
+MAKE_AGGLOM_EXTRACT_PY = $(CODE_DIR)/make_agglom_extract.py
 
-# rules
-$(AGGLOMERATION_EXTRACTS_DIR):
-	mkdir $(AGGLOMERATION_EXTRACTS_DIR)
+AGGLOM_EXTRACTS_CSV_FILEPATHS := $(addprefix $(AGGLOM_EXTRACTS_DIR)/, \
+	$(addsuffix .csv, $(AGGLOM_SLUGS)))
 
-$(MAKE_AGGLOMERATION_EXTRACT_PY): $(SETTINGS_PY)
+### rules
+$(AGGLOM_EXTRACTS_DIR): | $(DATA_PROCESSED_DIR)
+	mkdir $@
 
-$(AGGLOMERATION_EXTRACTS_DIR)/%.csv: $(SLS_CSV_FILEPATH) $(GMB_SHP_FILEPATH) $(MAKE_AGGLOMERATION_EXTRACT_PY) | $(AGGLOMERATION_EXTRACTS_DIR)
-	$(PYTHON_INTERPRETER) $(MAKE_AGGLOMERATION_EXTRACT_PY) $(SLS_CSV_FILEPATH) $(GMB_SHP_FILEPATH) $(basename $(notdir $@)) $@
+$(MAKE_AGGLOM_EXTRACT_PY): $(SETTINGS_PY)
 
-AGGLOMERATION_EXTRACTS_CSV_FILEPATHS := $(addprefix $(AGGLOMERATION_EXTRACTS_DIR)/, \
-	$(foreach AGGLOMERATION_SLUG, $(AGGLOMERATION_SLUGS), $(AGGLOMERATION_SLUG).csv))
+$(AGGLOM_EXTRACTS_DIR)/%.csv: $(SLS_CSV_FILEPATH) $(GMB_SHP_FILEPATH) \
+	$(MAKE_AGGLOM_EXTRACT_PY) | $(AGGLOM_EXTRACTS_DIR)
+	python $(MAKE_AGGLOM_EXTRACT_PY) $(SLS_CSV_FILEPATH) \
+		$(GMB_SHP_FILEPATH) $(basename $(notdir $@)) $@
 
-agglomeration_extracts: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
+agglomeration_extracts: $(AGGLOM_EXTRACTS_CSV_FILEPATHS)
+
+
+## BREAKPOINTS (inner and outer zone in the area-radius scaling)
+### variables
+BREAKPOINTS_DIR := $(DATA_PROCESSED_DIR)/breakpoints
+
+UTILS_PY := $(CODE_DIR)/utils.py
+MAKE_BREAKPOINTS_PY := $(CODE_DIR)/make_breakpoints.py
+
+BREAKPOINTS_JSON_FILEPATHS := $(addprefix $(BREAKPOINTS_DIR)/, \
+	$(addsuffix .json, $(AGGLOM_SLUGS)))
+
+### rules
+$(BREAKPOINTS_DIR): | $(DATA_PROCESSED_DIR)
+	mkdir $@
+
+$(MAKE_BREAKPOINTS_PY): $(SETTINGS_PY) $(UTILS_PY)
+
+$(BREAKPOINTS_DIR)/%.json: $(AGGLOM_EXTRACTS_DIR)/%.csv | $(BREAKPOINTS_DIR)
+	python $(MAKE_BREAKPOINTS_PY) $< $@
+
+breakpoints: $(BREAKPOINTS_JSON_FILEPATHS)
 
 
 ## FIGURES
-# variables
-NOTEBOOKS_DIR = notebooks
+### variables
 FIGURES_DIR = reports/figures
-FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes area_radius_scaling size_frequency_distribution population_change
+FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes \
+	area_radius_scaling size_frequency_distribution population_change
 
-# rules
-# set larger timeout than default (some notebooks will need it)
-$(FIGURES_DIR)/%.pdf: $(AGGLOMERATION_EXTRACTS_CSV_FILEPATHS)
-	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook --execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
+### rules
+#### set larger timeout than default (some notebooks will need it)
+$(FIGURES_DIR)/%.pdf: $(AGGLOM_EXTRACTS_CSV_FILEPATHS)
+	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook \
+		--execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
 
 
 FIGURES_PDF_FILEPATHS := $(addprefix $(FIGURES_DIR)/, \
@@ -132,51 +150,7 @@ clean: clean_interim clean_processed clean_figures clean_py
 
 ## Lint using flake8
 lint:
-	flake8 swiss_urbanization
-
-## Upload Data to S3
-sync_data_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync data/ s3://$(BUCKET)/data/
-else
-	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-endif
-
-## Download Data from S3
-sync_data_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/data/ data/
-else
-	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-endif
-
-## Set up python interpreter environment
-create_environment:
-ifeq (conda,$(VIRTUALENV))
-		@echo ">>> Detected conda, creating conda environment."
-	conda env create --name $(PROJECT_NAME) -f environment.yml
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
-else
-	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
-	@echo ">>> Installing virtualenvwrapper if not already intalled.\nMake sure the following lines are in shell startup file\n\
-	export WORKON_HOME=$$HOME/.virtualenvs\nexport PROJECT_HOME=$$HOME/Devel\nsource /usr/local/bin/virtualenvwrapper.sh\n"
-	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-endif
-
-## Test python environment is setup correctly
-test_environment:
-ifeq (conda,$(VIRTUALENV))
-ifneq (${CONDA_DEFAULT_ENV}, $(PROJECT_NAME))
-	$(error Must activate `$(PROJECT_NAME)` environment before proceeding)
-endif
-endif
-	$(PYTHON_INTERPRETER) test_environment.py
-
-#################################################################################
-# PROJECT RULES                                                                 #
-#################################################################################
-
+	flake8 $(CODE_DIR)
 
 
 #################################################################################
