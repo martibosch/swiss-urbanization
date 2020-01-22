@@ -11,7 +11,7 @@ install:
   - conda config --add channels conda-forge --force 
   - conda config --set always_yes yes
   - conda config --set channel_priority strict
-  - make create_environment
+  - conda env create --name swiss-urbanization -f environment.yml
   - source activate swiss-urbanization
   - conda info -a
   - conda list

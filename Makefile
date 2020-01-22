@@ -1,5 +1,5 @@
-.PHONY: clean clean_raw clean_interim clean_processed clean_figures clean_py \
-	agglomeration_extracts breakpoints figures lint
+.PHONY: download_gmb download_sls agglomeration_extracts breakpoints figures \
+	clean clean_raw clean_processed clean_figures clean_py lint
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -11,13 +11,18 @@ CODE_DIR = swiss_urbanization
 DATA_DIR = data
 DATA_RAW_DIR := $(DATA_DIR)/raw
 DATA_PROCESSED_DIR := $(DATA_DIR)/processed
+NOTEBOOKS_DIR = notebooks
+FIGURES_DIR = reports/figures
 
 ### rules
+$(DATA_DIR):
+	mkdir $@
 $(DATA_RAW_DIR): | $(DATA_DIR)
 	mkdir $@
 $(DATA_PROCESSED_DIR): | $(DATA_DIR)
 	mkdir $@
-
+$(FIGURES_DIR):
+	mkdir $@
 
 ## DOWNLOAD DATA
 ### variables
@@ -60,7 +65,7 @@ download_sls: $(SLS_CSV_FILEPATH)
 SETTINGS_PY := $(CODE_DIR)/settings.py
 
 AGGLOM_SLUGS = bern lausanne zurich
-AGGLOM_EXTRACTS_DIR := $(DATA_PROCESSED_DIR)/agglom_extracts
+AGGLOM_EXTRACTS_DIR := $(DATA_PROCESSED_DIR)/agglomeration_extracts
 MAKE_AGGLOM_EXTRACT_PY = $(CODE_DIR)/make_agglom_extract.py
 
 AGGLOM_EXTRACTS_CSV_FILEPATHS := $(addprefix $(AGGLOM_EXTRACTS_DIR)/, \
@@ -104,13 +109,13 @@ breakpoints: $(BREAKPOINTS_JSON_FILEPATHS)
 
 ## FIGURES
 ### variables
-FIGURES_DIR = reports/figures
-FIGURE_BASENAMES = landscape_plots metrics_time_series growth_modes \
-	area_radius_scaling size_frequency_distribution population_change
+#### landscape_plots dropped because of basemap incompatibility with pyproj 2
+FIGURE_BASENAMES = population_change metrics_time_series growth_modes \
+	area_radius_scaling
 
 ### rules
 #### set larger timeout than default (some notebooks will need it)
-$(FIGURES_DIR)/%.pdf: $(AGGLOM_EXTRACTS_CSV_FILEPATHS)
+$(FIGURES_DIR)/%.pdf: $(AGGLOM_EXTRACTS_CSV_FILEPATHS) | $(FIGURES_DIR)
 	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook \
 		--execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
 
@@ -123,22 +128,15 @@ figures: $(FIGURES_PDF_FILEPATHS)
 
 ## Clean Datasets
 clean_raw:
-	find data/raw/ ! -name '.gitkeep' -type f -exec rm -f {} +
-	find data/raw/ ! -path data/raw/ -type d -exec rm -rf {} +
-
-clean_interim:
-	find data/interim/ ! -name '.gitkeep' -type f -exec rm -f {} +
-	find data/interim/ ! -path data/interim/ -type d -exec rm -rf {} +
+	rm -rf $(DATA_RAW_DIR)
 
 clean_processed:
-	find data/processed/ ! -name '.gitkeep' -type f -exec rm -f {} +
-	find data/processed/ ! -path data/processed/ -type d -exec rm -rf {} +
+	rm -rf $(DATA_PROCESSED_DIR)
 
 ## Clean Figures
 clean_figures:
-	find reports/figures/ ! -name '.gitkeep' -type f -exec rm -f {} +
-	find reports/figures/ ! -path reports/figures/ -type d -exec rm -rf {} +
-	rm notebooks/*.nbconvert.ipynb
+	rm -rf $(FIGURES_DIR)
+	rm $(NOTEBOOKS_DIR)/*.nbconvert.ipynb
 
 ## Delete all compiled Python files
 clean_py:
@@ -146,7 +144,7 @@ clean_py:
 	find . -type d -name "__pycache__" -delete
 
 ## Clean all (except raw)
-clean: clean_interim clean_processed clean_figures clean_py
+clean: clean_processed clean_figures clean_py
 
 ## Lint using flake8
 lint:

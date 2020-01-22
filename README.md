@@ -55,6 +55,10 @@ jupyter-notebook
 
 and generate the figures interactively by executing the notebooks of the `notebooks` directory.
 
+### Important note
+
+The `landscape_plots.pdf` figure cannot be reproduced with the current environment (see the file `environment.yml`) because of [the incompatibility between the basemap installed from `conda-forge` and pyproj 2.0](https://github.com/matplotlib/basemap/pull/454).
+
 ------------------------------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
