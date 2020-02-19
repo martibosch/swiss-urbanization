@@ -232,7 +232,7 @@ While the Federal Statue on regional planning of 1979 limited the number of new 
 Forecasts based on the current urbanization trends predict significant increases of urban land use demands over the next decades, mostly at the expense of agricultural land located at the fringe of existing urban agglomerations \citep{price2015future}.
 
 Given that a significant part of the cross-border urban agglomerations of Geneva and Basel (the second and third largest in Switzerland) lie beyond the Swiss boundaries \mycitep{sfso2014espace}, in order to ensure coherence of the land use/land cover data, this study comprises only three of the five largest Swiss urban agglomerations, namely Bern, Lausanne and Zurich \mycitep{sfso2018city}.
-As shown in \autoref{figures/population_change.pdf}, the three agglomerations have undergone important population growth over the last 30 years, especially during the most recent years and at the agglomeration extent.
+As shown in \autoref{figures/population_change}, the three agglomerations have undergone important population growth over the last 30 years, especially during the most recent years and at the agglomeration extent.
 With a total population over 1.3 million and land area of 1305 km$^2$ (1038 hab/km$^2$), Zurich is the largest Swiss urban agglomeration. As a leading global city and one of the world's largest financial centers, Zurich has the country's largest airport and railway station, and also hosts the largest Swiss universities and higher education institutions. 
 Bern is the capital of Switzerland and fourth most populous urban agglomeration in Switzerland, with a total population of 410000 inhabitants and occupying a land area of 783 km$^2$ (531 hab/km$^2$). As the fifth largest Swiss urban agglomeration and the second most important student and research center after Zurich, the Lausanne agglomeration has a total population of 409000 inhabitants over a land area of 773 km$^2$ (537 hab/km$^2$). Given its larger population growth rate, Lausanne is likely to soon surpass Bern and become the fourth largest urban agglomeration in Switzerland.
 % Zurich: 1021859 (1990), 1080728 (2000), 1191058 (2010), 1354140 (2017)
@@ -243,9 +243,9 @@ Overall, the three urban agglomerations are characterized by a pervasive public 
 
 \begin{figure}[!ht]
     \centering  
-    \includegraphics[width=\linewidth]{figures/population_change.pdf}
+    \includegraphics[width=\linewidth]{figures/population_change}
     \vspace{.5em}
-    \caption[Population change]{\label{figures/population_change.pdf}Population change of the three regions of study at the city core (left) and agglomeration extent (right) over the periods of 1990-2000, 2000-2010 and 2010-2017. Data from the Urban Audit collection \mycitep{sfso2018city}.}
+    \caption[Population change]{\label{figures/population_change}Population change of the three regions of study at the city core (left) and agglomeration extent (right) over the periods of 1990-2000, 2000-2010 and 2010-2017. Data from the Urban Audit collection \mycitep{sfso2018city}.}
 \end{figure}
 
 
@@ -258,14 +258,14 @@ The SFSO land statistics datasets have been used to produce a series of categori
 In order to process the SFSO datasets in an automated and reproducible manner, an open source reusable toolbox to manage, transform and export categorical raster maps has been developed in Python \citep{bosch2019swisslandstats}.
 The boundaries of each urban agglomeration have been adopted from the definitions provided also by the \mycitet{sfso2014espace}, which comprise multiple municipalities and have been established in consideration of population density, proximity between centers, economic activities and commuting behavior.
 As stated above, Geneva and Basel are excluded from this study because a significant portion of their urban agglomeration lies beyond the extent covered by the SFSO land statistics inventory, namely the administrative boundaries of Switzerland.
-The spatiotemporal evolution of the urban footprint for the three selected urban agglomerations (i.e., Bern, Lausanne and Zurich) over the study period (i.e., 1980-2016\textsuperscript{\ref{fn:years}}) is displayed in \autoref{figures/landscape_plots.pdf}.
+The spatiotemporal evolution of the urban footprint for the three selected urban agglomerations (i.e., Bern, Lausanne and Zurich) over the study period (i.e., 1980-2016\textsuperscript{\ref{fn:years}}) is displayed in \autoref{figures/landscape_plots}.
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.4\textwidth}
     \centering  
-    \includegraphics[width=\linewidth]{figures/landscape_plots.pdf}
+    \includegraphics[width=\linewidth]{figures/landscape_plots}
     % \vspace{.5em}
-    \caption[Evolution of urban patches]{\label{figures/landscape_plots.pdf}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich.}
+    \caption[Evolution of urban patches]{\label{figures/landscape_plots}Evolution of urban patches of the three urban agglomerations throughout their respective periods of study. The times t$_0$, t$_1$, t$_2$ and t$_3$ correspond to 1981, 1993, 2004 and 2013 for Bern; 1980, 1990, 2005 and 2014 for Lausanne and 1982, 1994, 2007 and 2016 for Zurich.}
   \end{adjustwidth}
 \end{figure}
 
@@ -383,14 +383,14 @@ where $L_c$ denotes the length of the interface between the new urban patch and 
 
 \subsection*{Area-radius relationship}
 
-The area-radius relationship of the three urban agglomerations at each temporal snapshot is plotted in \autoref{figures/area_radius_scaling.pdf}.
+The area-radius relationship of the three urban agglomerations at each temporal snapshot is plotted in \autoref{figures/area_radius_scaling}.
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.4\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/area_radius_scaling.pdf}
+    \includegraphics[width=\linewidth]{figures/area_radius_scaling}
     \vspace{.5em}
-    \caption[Area-radius scaling]{\label{figures/area_radius_scaling.pdf}Area-radius relationship of the three urban agglomerations at each temporal snapshot. The plot is produced by computing the total area occupied by urban land uses laying within a series of radius values (noted by the dot-shaped markers) from 1000 to 20000m, successively increasing by a step of 500m. The reference center points correspond to the town hall location of each urban agglomeration, and have been manually retrieved from the OpenStreetMap\footnotemark. % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
+    \caption[Area-radius scaling]{\label{figures/area_radius_scaling}Area-radius relationship of the three urban agglomerations at each temporal snapshot. The plot is produced by computing the total area occupied by urban land uses laying within a series of radius values (noted by the dot-shaped markers) from 1000 to 20000m, successively increasing by a step of 500m. The reference center points correspond to the town hall location of each urban agglomeration, and have been manually retrieved from the OpenStreetMap\footnotemark. % By querying the coordinates of the Node element with the tags `name={city name}` and `admin_centre:4=yes`
     The upper inset shows the evolution along the temporal snapshots of the breakpoint $r_b$ (in meters) for the two-segment regression that minimizes the sum of squared residuals, while the lower inset shows the evolution along the temporal snapshots of the coefficient of determination R$^2$ of the single-segment fit (blue) and of the two-segment piecewise fit (orange). See \nameref{code-area-radius-scaling}.}
   \end{adjustwidth}
 \end{figure}
@@ -414,14 +414,14 @@ This suggests that as the two agglomerations become more urbanized, their area-r
 
 \subsection*{Time series of landscape metrics}
 
-The computed time series of landscape metrics for Bern, Lausanne and Zurich at the extents of the whole agglomeration, the inner zone and outer zone are displayed in \autoref{figures/metrics_time_series.pdf} (see \nameref{code-metrics-time-series}).
+The computed time series of landscape metrics for Bern, Lausanne and Zurich at the extents of the whole agglomeration, the inner zone and outer zone are displayed in \autoref{figures/metrics_time_series} (see \nameref{code-metrics-time-series}).
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.3\textwidth}
     \centering
-    \includegraphics[width=1.3\textwidth]{figures/metrics_time_series.pdf}
+    \includegraphics[width=1.3\textwidth]{figures/metrics_time_series}
     
-    \caption[Time series of landscape metrics]{\label{figures/metrics_time_series.pdf}Time series of landscape metrics, computed at the urban class level.}
+    \caption[Time series of landscape metrics]{\label{figures/metrics_time_series}Time series of landscape metrics, computed at the urban class level.}
   \end{adjustwidth}
 \end{figure}
 
@@ -473,15 +473,15 @@ Finally, the distance between urban patches, reflected by the mean euclidean-nea
   
 \subsection*{Growth modes}
 
-The changes in the relative dominance of the three growth modes, namely infilling, edge expansion and leapfrog, are displayed in \autoref{figures/growth_modes.pdf} (see \nameref{code-growth-modes}).
+The changes in the relative dominance of the three growth modes, namely infilling, edge expansion and leapfrog, are displayed in \autoref{figures/growth_modes} (see \nameref{code-growth-modes}).
 
 \begin{figure}[!ht]
   \begin{adjustwidth}{0cm}{-.4\textwidth}
     \centering
 
-    \includegraphics[width=1.3\textwidth]{figures/growth_modes.pdf}
+    \includegraphics[width=1.3\textwidth]{figures/growth_modes}
     
-    \caption[Three growth modes]{\label{figures/growth_modes.pdf}Changes in the relative dominance of infilling, edge expansion and leapfrog over the three time periods in terms of the area of the new urban patches, for the urban agglomerations of Bern (upper row), Lausanne (middle row) and Zurich (bottom row) and at the extents of the whole agglomeration (left), inner zone (center) and outer zone (right). See \nameref{code-growth-modes}.}
+    \caption[Three growth modes]{\label{figures/growth_modes}Changes in the relative dominance of infilling, edge expansion and leapfrog over the three time periods in terms of the area of the new urban patches, for the urban agglomerations of Bern (upper row), Lausanne (middle row) and Zurich (bottom row) and at the extents of the whole agglomeration (left), inner zone (center) and outer zone (right). See \nameref{code-growth-modes}.}
   \end{adjustwidth}
 \end{figure}
 

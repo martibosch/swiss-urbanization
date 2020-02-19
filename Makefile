@@ -115,15 +115,15 @@ FIGURE_BASENAMES = population_change metrics_time_series growth_modes \
 
 ### rules
 #### set larger timeout than default (some notebooks will need it)
-$(FIGURES_DIR)/%.pdf: $(AGGLOM_EXTRACTS_CSV_FILEPATHS) | $(FIGURES_DIR)
+$(FIGURES_DIR)/%.eps: $(AGGLOM_EXTRACTS_CSV_FILEPATHS) | $(FIGURES_DIR)
 	jupyter nbconvert --ExecutePreprocessor.timeout=600 --to notebook \
 		--execute $(NOTEBOOKS_DIR)/$(basename $(notdir $@)).ipynb 
 
 
-FIGURES_PDF_FILEPATHS := $(addprefix $(FIGURES_DIR)/, \
-	$(foreach FIGURE_BASENAME, $(FIGURE_BASENAMES), $(FIGURE_BASENAME).pdf))
+FIGURES_EPS_FILEPATHS := $(addprefix $(FIGURES_DIR)/, \
+	$(foreach FIGURE_BASENAME, $(FIGURE_BASENAMES), $(FIGURE_BASENAME).eps))
 
-figures: $(FIGURES_PDF_FILEPATHS)
+figures: $(FIGURES_EPS_FILEPATHS)
 
 
 ## Clean Datasets
