@@ -7,6 +7,7 @@ dependencies:
   - nbconvert
   - osmnx
   - pip
+  - pandas<1.0.0
   - pylandstats>=2.0.0
   - pyproj>=2.2.0
   - python-dotenv
