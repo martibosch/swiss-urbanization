@@ -4,9 +4,9 @@
 Spatiotemporal patterns of urbanization in Switzerland
 ==============================
 
-Materials necessary to reproduce the working paper:
+Materials to reproduce the article:
 
-Bosch M., Chenal J. 2019. "Spatiotemporal patterns of urbanization in three Swiss urban agglomerations: insights from landscape metrics, growth modes and fractal analysis". Preprint available at bioRxiv. https://doi.org/10.1101/645549
+Bosch M., Jaligot R., Chenal J. 2020. "Spatiotemporal patterns of urbanization in three Swiss urban agglomerations: insights from landscape metrics, growth modes and fractal analysis". *Landscape ecology*. [10.1007/s10980-020-00985-y](https://doi.org/10.1007/s10980-020-00985-y)
 
 ![Example figure](figure.png)
 
